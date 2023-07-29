@@ -62,42 +62,43 @@ function Register() {
   
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
-    console.log(confirmPassword.current);
-    if (confirmPassword.current.value !== password) {
-      confirmPassword.current.setCustomValidity("Passwords don't match!");
-    } else {
-      const user = {
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        password: password,
-        dateOfBirth: dateOfBirth,
-        status: "active",
-        followers: [],
-        statusUser: "USER",
-        typePets: [],
-        profilePicture: "",
-        coverPicture: "",
-      };
-      
-      console.log(user);
-      try {
-        const res = await axios.post(`${path}/api/auth/register`, user);
-        if (res.status === 200) {
-          localStorage.setItem("Uid", res.data.member_id);
-          history.push({
-            pathname: "/typepet",
-            state: res.data.member_id, // pass the user object as a prop
-          }); // redirect to the TypePet page
-        } else {
-          console.log("Registration failed. Status:", res.status);
-        }
-      } catch (err) {
-        console.log(err);
+  event.preventDefault();
+  if (confirmPassword !== password) {
+    // Set custom validity directly on the input element
+    document.getElementById('confirmPassword').setCustomValidity("Passwords don't match!");
+  } else {
+    const user = {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      password: password,
+      dateOfBirth: dateOfBirth,
+      status: "active",
+      followers: [],
+      statusUser: "USER",
+      typePets: [],
+      profilePicture: "",
+      coverPicture: "",
+    };
+
+    console.log(user);
+    try {
+      const res = await axios.post(`${path}/api/auth/register`, user);
+      if (res.status === 200) {
+        localStorage.setItem("Uid", res.data.member_id);
+        history.push({
+          pathname: "/typepet",
+          state: res.data.member_id, // pass the user object as a prop
+        }); // redirect to the TypePet page
+      } else {
+        console.log("Registration failed. Status:", res.status);
       }
+    } catch (err) {
+      console.log(err);
     }
-  };
+  }
+};
+
 
   const handleFirstNameChange = (event) => {
     setFirstName(event.target.value);
@@ -211,8 +212,6 @@ function Register() {
                     label="Email Address"
                     name="email"
                     autoComplete="email"
-                    value={email}
-                    onChange={handleEmailChange}
                   />
                   <TextField
                     sx={{ mb: 2 }}

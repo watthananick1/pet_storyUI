@@ -63,9 +63,9 @@ function Register() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(confirmPassword.current);
-    if (confirmPassword.current.value !== password) {
+    if (confirmPassword !== password) {
       confirmPassword.current.setCustomValidity("Passwords don't match!");
+
     } else {
       const user = {
         firstName: firstName,
@@ -211,8 +211,6 @@ function Register() {
                     label="Email Address"
                     name="email"
                     autoComplete="email"
-                    value={email}
-                    onChange={handleEmailChange}
                   />
                   <TextField
                     sx={{ mb: 2 }}

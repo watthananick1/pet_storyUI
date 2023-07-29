@@ -63,7 +63,6 @@ function Register() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(confirmPassword.current);
     if (confirmPassword.current.value !== password) {
       confirmPassword.current.setCustomValidity("Passwords don't match!");
     } else {
@@ -75,13 +74,14 @@ function Register() {
         dateOfBirth: dateOfBirth,
         status: "active",
         followers: [],
+        followings: [],
         statusUser: "USER",
         typePets: [],
         profilePicture: "",
         coverPicture: "",
       };
       
-      console.log(user);
+      consol
       try {
         const res = await axios.post(`${path}/api/auth/register`, user);
         if (res.status === 200) {
@@ -211,8 +211,6 @@ function Register() {
                     label="Email Address"
                     name="email"
                     autoComplete="email"
-                    value={email}
-                    onChange={handleEmailChange}
                   />
                   <TextField
                     sx={{ mb: 2 }}

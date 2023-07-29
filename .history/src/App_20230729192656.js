@@ -24,8 +24,7 @@ function App() {
           {/* {user ? <AdminModel /> : <Login />} */}
         </Route>
         <Route path="/login">{user ? <Redirect to="/" /> : <Login />}</Route>
-        <Route path="/typepet" component={TypePet} >
-          {user ? <Redirect to="/" /> : <TypePet />}
+        <Route path="/typepet"  component={TypePet}>
         </Route>
         <Route path="/dashboard">
           {user && user.statusUser === "ADMIN" ? <AdminModel /> : <Home />}

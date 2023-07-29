@@ -212,7 +212,7 @@ function Register() {
                     name="email"
                     autoComplete="email"
                     value={email}
-                    onChange={handleEmailChange}
+                    onCh
                   />
                   <TextField
                     sx={{ mb: 2 }}

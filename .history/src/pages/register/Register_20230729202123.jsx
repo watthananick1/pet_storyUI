@@ -63,9 +63,9 @@ function Register() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(confirmPassword.current);
-    if (confirmPassword.current.value !== password) {
-      confirmPassword.current.setCustomValidity("Passwords don't match!");
+    if (confirmPassword !== password) {
+      // Set custom validity directly on the input element
+      document.getElementById('confirmPassword').setCustomValidity("Passwords don't match!");
     } else {
       const user = {
         firstName: firstName,
@@ -80,7 +80,7 @@ function Register() {
         profilePicture: "",
         coverPicture: "",
       };
-      
+  
       console.log(user);
       try {
         const res = await axios.post(`${path}/api/auth/register`, user);
@@ -98,6 +98,7 @@ function Register() {
       }
     }
   };
+  
 
   const handleFirstNameChange = (event) => {
     setFirstName(event.target.value);
@@ -211,8 +212,6 @@ function Register() {
                     label="Email Address"
                     name="email"
                     autoComplete="email"
-                    value={email}
-                    onChange={handleEmailChange}
                   />
                   <TextField
                     sx={{ mb: 2 }}

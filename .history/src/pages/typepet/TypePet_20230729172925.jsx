@@ -14,7 +14,7 @@ export default function TypePet(props) {
   useEffect(() => {
     const getTypePets = async () => {
       try {
-        const res = await axios.get(`${path}/api/typePets`);
+        const res = await axios.get("/api/typePets");
         setTypePets(res.data);
       } catch (err) {
         console.log(err);
