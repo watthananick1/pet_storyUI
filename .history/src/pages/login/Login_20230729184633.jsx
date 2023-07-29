@@ -8,7 +8,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import { Link } from 'react-router-dom';
+import { Outlet, Link } from "react-router-dom";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -73,7 +73,7 @@ export default function SignInSide() {
   };
 
   return (
-    <div className="login">
+    <><div className="login">
       <div className="loginWrapper">
         <ThemeProvider theme={theme}>
           <Grid container component="main">
@@ -84,17 +84,14 @@ export default function SignInSide() {
               sm={4}
               md={7}
               sx={{
-                backgroundImage:
-                  "url(https://firebasestorage.googleapis.com/v0/b/pet-story-f51e3.appspot.com/o/mainData%2FloginImage1.jpg?alt=media&token=4547e22e-e032-4eb9-82fa-84551789d27e)",
+                backgroundImage: "url(https://firebasestorage.googleapis.com/v0/b/pet-story-f51e3.appspot.com/o/mainData%2FloginImage1.jpg?alt=media&token=4547e22e-e032-4eb9-82fa-84551789d27e)",
                 backgroundRepeat: "no-repeat",
-                backgroundColor: (t) =>
-                  t.palette.mode === "light"
-                    ? t.palette.grey[50]
-                    : t.palette.grey[900],
+                backgroundColor: (t) => t.palette.mode === "light"
+                  ? t.palette.grey[50]
+                  : t.palette.grey[900],
                 backgroundSize: "cover",
                 backgroundPosition: "center",
-              }}
-            />
+              }} />
             <Grid
               item
               xs={12}
@@ -133,8 +130,7 @@ export default function SignInSide() {
                     label="Email Address"
                     name="email"
                     autoComplete="email"
-                    autoFocus
-                  />
+                    autoFocus />
                   <TextField
                     margin="normal"
                     required
@@ -160,19 +156,14 @@ export default function SignInSide() {
                           </IconButton>
                         </InputAdornment>
                       ),
-                    }}
-                  />
+                    }} />
                   <FormControlLabel
-                    control={
-                      <Checkbox
-                        value="remember"
-                        color="primary"
-                        checked={rememberMe}
-                        onChange={handleChangeRememberMe}
-                      />
-                    }
-                    label="Remember me"
-                  />
+                    control={<Checkbox
+                      value="remember"
+                      color="primary"
+                      checked={rememberMe}
+                      onChange={handleChangeRememberMe} />}
+                    label="Remember me" />
                   <Button
                     type="submit"
                     fullWidth
@@ -200,6 +191,6 @@ export default function SignInSide() {
           </Grid>
         </ThemeProvider>
       </div>
-    </div>
+    </div><Outlet /></>
   );
 }

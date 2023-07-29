@@ -30,7 +30,7 @@ function App() {
         <Route path="/dashboard">
           {user && user.statusUser === "ADMIN" ? <AdminModel /> : <Home />}
         </Route>
-        <Route path="/register" component={Register} />
+        <Route path="/register" element={<Register} />
         <Route path="/profile/:firstName" component={Profile}>
           {user ? <Profile /> : <Login />}
         </Route>
