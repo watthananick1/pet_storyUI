@@ -1,0 +1,29 @@
+*{
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Group */
+
+position: absolute;
+left: 32.73%;
+right: 32.28%;
+top: 72.22%;
+bottom: -15.31%;
+
+transform: matrix(1, 0, 0, -1, 0, 0);
+
+
+/* Vector */
+
+box-sizing: border-box;
+
+position: absolute;
+left: 32.73%;
+right: 32.28%;
+top: 72.22%;
+bottom: -15.31%;
+
+background: #6200DE;
+border: 5px solid #DED609;
+transform: matrix(1, 0, 0, -1, 0, 0);
