@@ -241,14 +241,6 @@ export default function PrimarySearchAppBar() {
         </ListItemIcon>
         Profile
       </MenuItem>
-      {user.statusUser === "ADMIN" && (
-        <MenuItem onClick={handleDashboardClick}>
-          <ListItemIcon>
-            <DashboardIcon fontSize="small" />
-          </ListItemIcon>
-          Dashboard
-        </MenuItem>
-      )}
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
       <MenuItem onClick={handleLogout}>
         <ListItemIcon>
@@ -293,7 +285,7 @@ export default function PrimarySearchAppBar() {
     const NotificationRef = firestore.collection("Notifications").doc(id);
     NotificationRef.delete()
       .then(() => {
-        console.log("Notification deleted successfully");
+        console.log("Notification deleted successfully"); // Notification deleted successfully
       })
       .catch((err) => {
         console.log(err);

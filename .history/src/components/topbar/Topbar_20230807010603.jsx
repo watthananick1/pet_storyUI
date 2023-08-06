@@ -241,14 +241,6 @@ export default function PrimarySearchAppBar() {
         </ListItemIcon>
         Profile
       </MenuItem>
-      {user.statusUser === "ADMIN" && (
-        <MenuItem onClick={handleDashboardClick}>
-          <ListItemIcon>
-            <DashboardIcon fontSize="small" />
-          </ListItemIcon>
-          Dashboard
-        </MenuItem>
-      )}
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
       <MenuItem onClick={handleLogout}>
         <ListItemIcon>

@@ -9,6 +9,7 @@ import InputBase from "@mui/material/InputBase";
 import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
+import ListItemIcon from "@mui/material/ListItemIcon";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Avatar from "@mui/material/Avatar";
@@ -21,6 +22,7 @@ import MoreIcon from "@mui/icons-material/MoreVert";
 import Autocomplete from "@mui/material/Autocomplete";
 import { performSearch } from "../search/Search";
 import { format } from "timeago.js";
+import ItemsList from "../listItems/listItems";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { AuthContext } from "../../context/AuthContext";
@@ -29,17 +31,11 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import "firebase/compat/firestore";
 import { Link, useHistory, NavLink } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
-import DeleteIcon from "@mui/icons-material/Delete";
 import {
   ThemeProvider,
   createTheme,
   responsiveFontSizes,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
-  ListItemIcon
-} from "@mui/material";
+} from "@mui/material/styles";
 import { Chat, Notifications, Settings, Logout } from "@mui/icons-material";
 
 const firebaseConfig = {
@@ -241,14 +237,6 @@ export default function PrimarySearchAppBar() {
         </ListItemIcon>
         Profile
       </MenuItem>
-      {user.statusUser === "ADMIN" && (
-        <MenuItem onClick={handleDashboardClick}>
-          <ListItemIcon>
-            <DashboardIcon fontSize="small" />
-          </ListItemIcon>
-          Dashboard
-        </MenuItem>
-      )}
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
       <MenuItem onClick={handleLogout}>
         <ListItemIcon>
@@ -293,10 +281,10 @@ export default function PrimarySearchAppBar() {
     const NotificationRef = firestore.collection("Notifications").doc(id);
     NotificationRef.delete()
       .then(() => {
-        console.log("Notification deleted successfully");
+        console.log("Notification deleted successfully"); // Notification deleted successfully
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err); // Handle error
       });
   };
 
@@ -550,104 +538,10 @@ export default function PrimarySearchAppBar() {
             </Search>
             <Box sx={{ flexGrow: 1 }} />
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
-              <>
-              <Menu
-                key="noti"
-                anchorEl={anchorElNoti}
-                open={anchorElNoti}
-                onClose={handleCloseNoti}
-                sx={{ top: 40 }}
-                MenuListProps={{
-                  "aria-labelledby": "long-button",
-                }}
-                PaperProps={{
-                  style: {
-                    maxHeight: 48 * 4.5,
-                    width: "32ch",
-                  },
-                }}
-                transformOrigin={{ horizontal: "right", vertical: "bottom" }}
-                anchorOrigin={{ horizontal: "right", vertical: "top" }}
-              >
-                <List
-                  sx={{
-                    width: "100%",
-                    maxWidth: 360,
-                    bgcolor: "background.paper",
-                  }}
-                >
-                  <ListItem alignItems="flex-start">
-                    <ListItemText
-                      primary={
-                        <>
-                          <Typography
-                            sx={{ m: 1, Color: "#f1f1f1" }}
-                            variant="h6"
-                            display="inline"
-                            gutterBottom
-                          >
-                            Notification
-                          </Typography>
-                        </>
-                      }
-                    />
-                  </ListItem>
-                </List>
-                {messageData.map((notification, index) => (
-                  <MenuItem
-                    sx={{
-                      width: "100%",
-                      maxWidth: 360,
-                      bgcolor: "background.paper",
-                    }}
-                    key={index}
-                  >
-                    <ListItem alignItems="flex-start">
-                      <ListItemAvatar sx={{ width: 35, height: 35 }}>
-                        <Avatar
-                          alt="Remy Sharp"
-                          src={notification.profilePicture}
-                        />
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={
-                          <>
-                            <Typography variant="subtitle1" noWrap>
-                              {notification.name}
-                            </Typography>
-                            <Typography variant="subtitle2">
-                              is {notification.title}
-                            </Typography>
-                          </>
-                        }
-                        secondary={
-                          <>
-                            <Typography
-                              variant="caption"
-                              color="text.secondary"
-                            >
-                              {notification.formattedDate}
-                            </Typography>
-                          </>
-                        }
-                      />
-                      <ListItemIcon>
-                        <IconButton
-                          edge="end"
-                          aria-label="delete"
-                          onClick={() => handleDeleteNoti(notification.id)}
-                        >
-                          <DeleteIcon fontSize="small" />
-                        </IconButton>
-                      </ListItemIcon>
-                    </ListItem>
-                    <hr />
-                  </MenuItem>
-                ))}
-              </Menu>
-              </>
+              
               <IconButton
                 key="noti"
+                aria-label="show new notifications"
                 color="inherit"
                 onClick={(event) => handleClickReadNoti(event.currentTarget)}
               >

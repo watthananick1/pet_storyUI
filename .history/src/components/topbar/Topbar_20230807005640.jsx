@@ -9,6 +9,7 @@ import InputBase from "@mui/material/InputBase";
 import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
+import ListItemIcon from "@mui/material/ListItemIcon";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Avatar from "@mui/material/Avatar";
@@ -21,6 +22,7 @@ import MoreIcon from "@mui/icons-material/MoreVert";
 import Autocomplete from "@mui/material/Autocomplete";
 import { performSearch } from "../search/Search";
 import { format } from "timeago.js";
+import ItemsList from "../listItems/listItems";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { AuthContext } from "../../context/AuthContext";
@@ -34,12 +36,7 @@ import {
   ThemeProvider,
   createTheme,
   responsiveFontSizes,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
-  ListItemIcon
-} from "@mui/material";
+} from "@mui/material/styles";
 import { Chat, Notifications, Settings, Logout } from "@mui/icons-material";
 
 const firebaseConfig = {
@@ -241,14 +238,6 @@ export default function PrimarySearchAppBar() {
         </ListItemIcon>
         Profile
       </MenuItem>
-      {user.statusUser === "ADMIN" && (
-        <MenuItem onClick={handleDashboardClick}>
-          <ListItemIcon>
-            <DashboardIcon fontSize="small" />
-          </ListItemIcon>
-          Dashboard
-        </MenuItem>
-      )}
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
       <MenuItem onClick={handleLogout}>
         <ListItemIcon>
@@ -293,10 +282,10 @@ export default function PrimarySearchAppBar() {
     const NotificationRef = firestore.collection("Notifications").doc(id);
     NotificationRef.delete()
       .then(() => {
-        console.log("Notification deleted successfully");
+        console.log("Notification deleted successfully"); // Notification deleted successfully
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err); // Handle error
       });
   };
 
@@ -579,7 +568,7 @@ export default function PrimarySearchAppBar() {
                   <ListItem alignItems="flex-start">
                     <ListItemText
                       primary={
-                        <>
+                        <Fragment>
                           <Typography
                             sx={{ m: 1, Color: "#f1f1f1" }}
                             variant="h6"
@@ -588,7 +577,7 @@ export default function PrimarySearchAppBar() {
                           >
                             Notification
                           </Typography>
-                        </>
+                        </Fragment>
                       }
                     />
                   </ListItem>
@@ -611,24 +600,24 @@ export default function PrimarySearchAppBar() {
                       </ListItemAvatar>
                       <ListItemText
                         primary={
-                          <>
+                          <Fragment>
                             <Typography variant="subtitle1" noWrap>
                               {notification.name}
                             </Typography>
                             <Typography variant="subtitle2">
                               is {notification.title}
                             </Typography>
-                          </>
+                          </Fragment>
                         }
                         secondary={
-                          <>
+                          <Fragment>
                             <Typography
                               variant="caption"
                               color="text.secondary"
                             >
                               {notification.formattedDate}
                             </Typography>
-                          </>
+                          </Fragment>
                         }
                       />
                       <ListItemIcon>
@@ -648,6 +637,7 @@ export default function PrimarySearchAppBar() {
               </>
               <IconButton
                 key="noti"
+                aria-label="show new notifications"
                 color="inherit"
                 onClick={(event) => handleClickReadNoti(event.currentTarget)}
               >
