@@ -60,8 +60,8 @@ export default function SignInSide() {
   // };
   
   useEffect(() => {
-    setOpen(isOpen);
-  }, [isOpen]);
+    setOpen(post.post_Status.includes("ADMIN"));
+  }, [post.post_Status]);
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -84,6 +84,7 @@ export default function SignInSide() {
         severity: "error",
         text: "Please fill out all fields correctly",
       });
+      setOpen(true);
       history.push("/");
     } catch (error) {
       setMessage({ severity: "error", text: "An error occurred: " + error });

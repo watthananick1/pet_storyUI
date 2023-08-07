@@ -1,4 +1,4 @@
-import { useState, useContext, forwardRef, useEffect } from "react";
+import { useState, useContext, forwardRef } from "react";
 import "./login.css";
 import { loginCall } from "../../apiCalls";
 import { AuthContext } from "../../context/AuthContext";
@@ -48,7 +48,7 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignInSide() {
-  const {error: isOpen,  dispatch } = useContext(AuthContext);
+  const {error: open  dispatch } = useContext(AuthContext);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState({ severity: "success", text: " " });
@@ -58,10 +58,6 @@ export default function SignInSide() {
   // const handleClick = () => {
   //   setOpen(true);
   // };
-  
-  useEffect(() => {
-    setOpen(isOpen);
-  }, [isOpen]);
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -84,6 +80,7 @@ export default function SignInSide() {
         severity: "error",
         text: "Please fill out all fields correctly",
       });
+      setOpen(true);
       history.push("/");
     } catch (error) {
       setMessage({ severity: "error", text: "An error occurred: " + error });

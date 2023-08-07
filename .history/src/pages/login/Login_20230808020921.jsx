@@ -84,6 +84,7 @@ export default function SignInSide() {
         severity: "error",
         text: "Please fill out all fields correctly",
       });
+      setOpen(true);
       history.push("/");
     } catch (error) {
       setMessage({ severity: "error", text: "An error occurred: " + error });

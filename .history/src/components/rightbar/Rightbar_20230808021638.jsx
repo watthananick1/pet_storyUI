@@ -104,7 +104,7 @@ export function Rightbar({ user }) {
     const getFriends = async () => {
       try {
         const friendList = await axios.get(
-          `${path}/api/users/friends/${currentUser.member_id}`,
+          `${path}/api/users/friends/${user.member_id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -151,7 +151,7 @@ export function Rightbar({ user }) {
         <h4 className="rightbarTitle">Online Friends</h4>
         <ul className="rightbarFriendList">
           {Onlinefriends.map((u, index) => {
-            //*console.log("user", u.member_id);
+            //*console.log("user", u.member_id); // ใช้ในส่วนของ JavaScript
             return <Online key={index} user={u} />;
           })}
         </ul>

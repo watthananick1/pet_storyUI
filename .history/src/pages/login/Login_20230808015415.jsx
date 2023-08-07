@@ -1,4 +1,4 @@
-import { useState, useContext, forwardRef, useEffect } from "react";
+import { useState, useContext, forwardRef } from "react";
 import "./login.css";
 import { loginCall } from "../../apiCalls";
 import { AuthContext } from "../../context/AuthContext";
@@ -48,20 +48,16 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignInSide() {
-  const {error: isOpen,  dispatch } = useContext(AuthContext);
+  const { dispatch } = useContext(AuthContext);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState({ severity: "success", text: " " });
   const history = useHistory();
   const [rememberMe, setRememberMe] = useState(false);
 
-  // const handleClick = () => {
-  //   setOpen(true);
-  // };
-  
-  useEffect(() => {
-    setOpen(isOpen);
-  }, [isOpen]);
+  const handleClick = () => {
+    setOpen(true);
+  };
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -74,21 +70,19 @@ export default function SignInSide() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    // console.log({
+    //   email: data.get("email"),
+    //   password: data.get("password"),
+    // });
 
     try {
       await loginCall(
         { email: data.get("email"), password: data.get("password") },
         dispatch
       );
-      setMessage({
-        severity: "error",
-        text: "Please fill out all fields correctly",
-      });
       history.push("/");
     } catch (error) {
-      setMessage({ severity: "error", text: "An error occurred: " + error });
-      setOpen(true);
-      console.error("Error:", error);
+      console.error("Login failed:", error);
     }
   };
 

@@ -1,4 +1,4 @@
-import { useState, useContext, forwardRef, useEffect } from "react";
+import { useState, useContext } from "react";
 import "./login.css";
 import { loginCall } from "../../apiCalls";
 import { AuthContext } from "../../context/AuthContext";
@@ -8,7 +8,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -20,12 +20,9 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
-
-const Alert = forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+import Swal from 'sweetalert2';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 function Copyright(props) {
   return (
@@ -48,47 +45,29 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignInSide() {
-  const {error: isOpen,  dispatch } = useContext(AuthContext);
+  const { dispatch } = useContext(AuthContext);
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState({ severity: "success", text: " " });
   const history = useHistory();
   const [rememberMe, setRememberMe] = useState(false);
 
-  // const handleClick = () => {
-  //   setOpen(true);
-  // };
-  
-  useEffect(() => {
-    setOpen(isOpen);
-  }, [isOpen]);
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpen(false);
-  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    // console.log({
+    //   email: data.get("email"),
+    //   password: data.get("password"),
+    // });
 
     try {
       await loginCall(
         { email: data.get("email"), password: data.get("password") },
         dispatch
       );
-      setMessage({
-        severity: "error",
-        text: "Please fill out all fields correctly",
-      });
-      history.push("/");
+      history.push("/"); // Redirect to home page after successful login
     } catch (error) {
-      setMessage({ severity: "error", text: "An error occurred: " + error });
-      setOpen(true);
-      console.error("Error:", error);
+      console.error("Login failed:", error);
+      // Handle login failure, show error message, etc.
     }
   };
 
@@ -100,15 +79,6 @@ export default function SignInSide() {
     <div className="login">
       <div className="loginWrapper">
         <ThemeProvider theme={theme}>
-          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-            <Alert
-              onClose={handleClose}
-              severity={message.severity}
-              sx={{ width: "100%" }}
-            >
-              {message.text}
-            </Alert>
-          </Snackbar>
           <Grid container component="main">
             <CssBaseline />
             <Grid

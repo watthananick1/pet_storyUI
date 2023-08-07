@@ -104,7 +104,7 @@ export function Rightbar({ user }) {
     const getFriends = async () => {
       try {
         const friendList = await axios.get(
-          `${path}/api/users/friends/${currentUser.member_id}`,
+          `${path}/api/users/friends/${user.member_id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

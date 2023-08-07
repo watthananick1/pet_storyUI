@@ -59,9 +59,7 @@ export default function SignInSide() {
   //   setOpen(true);
   // };
   
-  useEffect(() => {
-    setOpen(isOpen);
-  }, [isOpen]);
+  useEffect
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -84,6 +82,7 @@ export default function SignInSide() {
         severity: "error",
         text: "Please fill out all fields correctly",
       });
+      setOpen(true);
       history.push("/");
     } catch (error) {
       setMessage({ severity: "error", text: "An error occurred: " + error });
