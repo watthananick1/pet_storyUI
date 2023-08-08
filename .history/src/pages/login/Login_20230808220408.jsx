@@ -1,6 +1,6 @@
 import { useState, useContext, forwardRef, useEffect } from "react";
 import "./login.css";
-import { loginCall, loginFacebookCall } from "../../apiCalls";
+import { loginCall } from "../../apiCalls";
 import { AuthContext } from "../../context/AuthContext";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -24,7 +24,7 @@ import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
-import GoogleIcon from '@mui/icons-material/Google';
+import jwt from "jsonwebtoken";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -79,37 +79,18 @@ export default function SignInSide() {
   }, [isOpen]);
 
   const handleFacebookLogin = async () => {
-    const provider = new firebase.auth.GoogleAuthProvider();
+    const provider = new firebase.auth.FacebookAuthProvider();
+
     try {
-      firebase.auth().signInWithPopup(provider).then((result) => {
-        var credential = result.credential;
-        var user = result.user;
-        console.log(user);
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // The email of the user's account used.
-        var email = error.email;
-        // The firebase.auth.AuthCredential type that was used.
-        var credential = error.credential;
+      const result = await firebase.auth().signInWithPopup(provider);
+      const token = jwt.sign({ userId: result.uid }, process.env.JWT_SECRET, {
+        expiresIn: "1h",
       });
-      // await loginFacebookCall(
-      //   {provider: provider},
-      //   dispatch
-      // );
-      setMessage({
-        severity: "error",
-        text: "Please fill out all fields correctly",
-      });
-      //console.log("Facebook login successful");
+      // เข้าสู่ระบบสำเร็จ
+      console.log("Facebook login successful", result.user);
+      console.log("Facebook token login successful", token);
     } catch (error) {
       console.error("Facebook login error:", error);
-      setMessage({
-        severity: "error",
-        text: "Facebook login error",
-      });
     }
   };
 
@@ -275,14 +256,12 @@ export default function SignInSide() {
                     <hr className="divider-line" />
                   </div>
                   <Button
-                    startIcon={<GoogleIcon />}
-                    component="a"
                     fullWidth
                     variant="contained"
                     onClick={handleFacebookLogin}
                     sx={{ mt: 3, mb: 2 }}
                   >
-                    Login with Google
+                    Login with Facebook
                   </Button>
                   <Grid container>
                     <Grid item xs>

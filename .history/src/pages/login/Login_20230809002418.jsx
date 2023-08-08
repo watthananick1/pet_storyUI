@@ -24,7 +24,6 @@ import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
-import GoogleIcon from '@mui/icons-material/Google';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -275,7 +274,7 @@ export default function SignInSide() {
                     <hr className="divider-line" />
                   </div>
                   <Button
-                    startIcon={<GoogleIcon />}
+                    startDecorator={<FavoriteBorder />}
                     component="a"
                     fullWidth
                     variant="contained"

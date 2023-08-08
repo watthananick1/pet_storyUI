@@ -24,7 +24,6 @@ import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
-import GoogleIcon from '@mui/icons-material/Google';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -275,14 +274,12 @@ export default function SignInSide() {
                     <hr className="divider-line" />
                   </div>
                   <Button
-                    startIcon={<GoogleIcon />}
-                    component="a"
                     fullWidth
                     variant="contained"
                     onClick={handleFacebookLogin}
                     sx={{ mt: 3, mb: 2 }}
                   >
-                    Login with Google
+                    Login with 
                   </Button>
                   <Grid container>
                     <Grid item xs>

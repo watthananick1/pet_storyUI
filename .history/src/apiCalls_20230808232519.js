@@ -28,6 +28,7 @@ export const loginFacebookCall = async (userCredential, dispatch) => {
     const data = user?.userId;
     const token = user?.token;
     
+    firebase.auth().signInWithPopup(userCredential);
 
     await firestore.collection("Users").doc(data).update({
       Online_Friends: true,

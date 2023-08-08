@@ -23,6 +23,7 @@ export const loginFacebookCall = async (userCredential, dispatch) => {
   dispatch({ type: "LOGIN_START" });
 
   try {
+    
     const res = await axios.post(`${path}/api/auth/loginFacebook`, userCredential);
     const user = res?.data;
     const data = user?.userId;

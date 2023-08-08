@@ -20,6 +20,7 @@
     "dayjs": "^1.11.9",
     "firebase": "^9.23.0",
     "js-cookie": "^3.0.5",
+    "jsonwebtoken": "^9.0.1",
     "jwt-decode": "^3.1.2",
     "mdb-ui-kit": "^6.3.1",
     "mui-fb-photo-grid": "^1.2.3",

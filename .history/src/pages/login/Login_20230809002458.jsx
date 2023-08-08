@@ -275,7 +275,7 @@ export default function SignInSide() {
                     <hr className="divider-line" />
                   </div>
                   <Button
-                    startIcon={<GoogleIcon />}
+                    startDecorator={<FavoriteBorder />}
                     component="a"
                     fullWidth
                     variant="contained"
