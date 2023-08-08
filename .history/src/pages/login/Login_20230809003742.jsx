@@ -1,6 +1,6 @@
 import { useState, useContext, forwardRef, useEffect } from "react";
 import "./login.css";
-import { loginCall, loginGoogleCall } from "../../apiCalls";
+import { loginCall, loginFacebookCall } from "../../apiCalls";
 import { AuthContext } from "../../context/AuthContext";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -78,24 +78,40 @@ export default function SignInSide() {
     setOpen(isOpen);
   }, [isOpen]);
 
-  const handleGoogleLogin = async () => {
+  const handleFacebookLogin = async () => {
     const provider = new firebase.auth.GoogleAuthProvider();
-  
     try {
-      const result = await firebase.auth().signInWithPopup(provider);
-      const user = result.user;
-      console.log("User ID:", user.uid);
-      console.log("User email:", user.email);
-  
-      // Call the loginGoogleCall function with the user's UID
-      await loginGoogleCall( user.uid, dispatch);
-  
-      console.log("Google login successful");
-    } catch (error) {
-      console.error("Google login error:", error);
+      firebase
+        .auth()
+        .signInWithPopup(provider)
+        .then((result) => {
+          var credential = result.credential;
+          var user = result.user;
+          console.log(user);
+        })
+        .catch((error) => {
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          // The email of the user's account used.
+          var email = error.email;
+          // The firebase.auth.AuthCredential type that was used.
+          var credential = error.credential;
+        });
+      // await loginFacebookCall(
+      //   {provider: provider},
+      //   dispatch
+      // );
       setMessage({
         severity: "error",
-        text: "Google login error",
+        text: "Please fill out all fields correctly",
+      });
+      //console.log("Facebook login successful");
+    } catch (error) {
+      console.error("Facebook login error:", error);
+      setMessage({
+        severity: "error",
+        text: "Facebook login error",
       });
     }
   };
@@ -269,19 +285,19 @@ export default function SignInSide() {
                       component="a"
                       fullWidth
                       variant="contained"
-                      onClick={handleGoogleLogin}
+                      onClick={handleFacebookLogin}
                       sx={{ mt: 3, mb: 2 }}
                     >
                       Login with Google
                     </Button>
                   </Box>
                   <Box
-                    sx={{ width: "100%", mb: 2, justifyContent: "center", display: { xs: "flex", sm: "none", md: "none" } }}
+                    sx={{ width: 100% justifyContent: "center", display: { xs: "block", sm: "none", md: "none" } }}
                   >
                     <IconButton
-                      variant="outlined"
+                      variant="contained"
                       component="a"
-                      onClick={handleGoogleLogin}
+                      onClick={handleFacebookLogin}
                     >
                       <GoogleIcon />
                     </IconButton>

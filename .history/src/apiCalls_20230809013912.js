@@ -47,6 +47,9 @@ export const loginCall = async (userCredential, dispatch) => {
     const user = res?.data;
     const data = user?.userId;
     const token = user?.token;
+    
+    console.log("User ID:", data);
+    console.log("User token:", token);
 
     await firestore.collection("Users").doc(data).update({
       Online_Friends: true,

@@ -78,25 +78,46 @@ export default function SignInSide() {
     setOpen(isOpen);
   }, [isOpen]);
 
-  const handleGoogleLogin = async () => {
+  const handleFacebookLogin = async () => {
     const provider = new firebase.auth.GoogleAuthProvider();
-  
+    const user
     try {
-      const result = await firebase.auth().signInWithPopup(provider);
-      const user = result.user;
-      console.log("User ID:", user.uid);
-      console.log("User email:", user.email);
-  
-      // Call the loginGoogleCall function with the user's UID
-      await loginGoogleCall( user.uid, dispatch);
-  
-      console.log("Google login successful");
+      firebase
+        .auth()
+        .signInWithPopup(provider)
+        .then((result) => {
+          var credential = result.credential;
+          var user = result.user;
+          console.log(user.uid);
+          console.log(user.email);
+          await loginGoogleCall(
+            { uid: user.uid },
+            dispatch
+          );
+        })
+        .catch((error) => {
+          // var errorCode = error.code;
+          // var errorMessage = error.message;
+          // var email = error.email;
+          // var credential = error.credential;
+          setMessage({
+            severity: "error",
+            text: "Please fill out all fields correctly",
+          });
+        });
+      // await loginFacebookCall(
+      //   {provider: provider},
+      //   dispatch
+      // );
+      //console.log("Facebook login successful");
     } catch (error) {
       console.error("Google login error:", error);
       setMessage({
         severity: "error",
         text: "Google login error",
       });
+    } finally {
+      console.log("Google login successful");
     }
   };
 
@@ -269,7 +290,7 @@ export default function SignInSide() {
                       component="a"
                       fullWidth
                       variant="contained"
-                      onClick={handleGoogleLogin}
+                      onClick={handleFacebookLogin}
                       sx={{ mt: 3, mb: 2 }}
                     >
                       Login with Google
@@ -281,7 +302,7 @@ export default function SignInSide() {
                     <IconButton
                       variant="outlined"
                       component="a"
-                      onClick={handleGoogleLogin}
+                      onClick={handleFacebookLogin}
                     >
                       <GoogleIcon />
                     </IconButton>

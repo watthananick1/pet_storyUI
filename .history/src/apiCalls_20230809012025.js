@@ -23,11 +23,11 @@ export const loginGoogleCall = async (userCredential, dispatch) => {
   dispatch({ type: "LOGIN_START" });
 
   try {
-    const res = await axios.post(`${path}/api/auth/loginGoogle`, {uid: userCredential});
+    const res = await axios.post(`${path}/api/auth/loginGoogle`, userCredential);
     const user = res?.data;
     const data = user?.userId;
     const token = user?.token;
-    console.log(token);
+    
 
     await firestore.collection("Users").doc(data).update({
       Online_Friends: true,

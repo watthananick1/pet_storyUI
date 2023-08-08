@@ -63,8 +63,7 @@ export const AuthContextProvider = ({ children }) => {
 
 export const fetchUserData = async (userId, token, dispatch) => {
   try {
-    console.log("User ID:", userId);
-    console.log("User token:", token);
+  
     const res = await axios.get(`${path}/api/users/GETuser/${userId}`, {
       headers: {
         Authorization: `Bearer ${token}`,

@@ -88,7 +88,7 @@ export default function SignInSide() {
       console.log("User email:", user.email);
   
       // Call the loginGoogleCall function with the user's UID
-      await loginGoogleCall( user.uid, dispatch);
+      await loginGoogleCall({ uid: user.uid }, dispatch);
   
       console.log("Google login successful");
     } catch (error) {
@@ -269,7 +269,7 @@ export default function SignInSide() {
                       component="a"
                       fullWidth
                       variant="contained"
-                      onClick={handleGoogleLogin}
+                      onClick={handleFacebookLogin}
                       sx={{ mt: 3, mb: 2 }}
                     >
                       Login with Google
@@ -281,7 +281,7 @@ export default function SignInSide() {
                     <IconButton
                       variant="outlined"
                       component="a"
-                      onClick={handleGoogleLogin}
+                      onClick={handleFacebookLogin}
                     >
                       <GoogleIcon />
                     </IconButton>
