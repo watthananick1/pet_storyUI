@@ -1,0 +1,26 @@
+.feed{
+    flex:5.5
+}
+
+.feedWrapper{
+    padding: 20px;
+}
+
+.loadingWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Adjust as needed */
+  }
+  
+  .floating-chip {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    bottom: 90%;
+    left: 40%;
+    transform: translateX(-50%);
+    z-index: 1000; /* ให้ Chip อยู่ด้านหน้าของเนื้อหา */
+  }
+  
