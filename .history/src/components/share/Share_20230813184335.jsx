@@ -78,7 +78,7 @@ export default function Share({ onNewPost }) {
     });
 
     socket.on("disconnect", (reason) => {
-      ///console.warn("Socket disconnected:", reason);
+      console.warn("Socket disconnected:", reason);
     });
 
     return () => {

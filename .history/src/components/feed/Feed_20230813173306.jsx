@@ -46,7 +46,6 @@ export default function Feed({ firstName, onProfile }) {
   const [loading, setLoading] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState(false);
-  const [Open, isSetOpen] = useState(false);
   const [placement, setPlacement] = useState();
   const [countPost, setCountPost] = useState(0);
   const token = Cookies.get("token");
@@ -68,8 +67,7 @@ export default function Feed({ firstName, onProfile }) {
     const source = axios.CancelToken.source();
     try {
       const currentTime = new Date().getTime();
-      setLoading(true);
-      isSetOpen(false);
+      //setLoading(true);
       const res = await axios.get(`${path}/api/posts/${user.member_id}/date`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -95,21 +93,23 @@ export default function Feed({ firstName, onProfile }) {
         console.log(err);
       }
     } finally {
-      setLoading(false);
-      setOpen(false);
+      //setLoading(false);
     }
   };
 
   const fetchUserPosts = async () => {
     try {
       const currentTime = new Date().getTime();
-      isSetOpen(false);
-      setLoading(true);
-      const res = await axios.get(`${path}/api/posts/user/${firstName}/date`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+
+      //setLoading(true);
+      const res = await axios.get(
+        `${path}/api/posts/user/${user.firstName}/date`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       const sortedPosts = res.data.sort((a, b) => {
         const timeDiffA = Math.abs(
           currentTime - new Date(a.createdAt.seconds * 1000).getTime()
@@ -125,14 +125,19 @@ export default function Feed({ firstName, onProfile }) {
       console.log(error);
     } finally {
       setLoading(false);
-      setOpen(false);
     }
   };
 
   const handleRefresh = (key) => {
     closeSnackbar(key);
 
-    if (onProfile) {
+    // if (user && user.member_id) {
+    //   if (newPosts && newPosts.member_id) {
+    //     setPosts((prevPosts) => [...newPosts, ...prevPosts]);
+    //   }
+    // }
+    
+    if (onProfile){
       fetchUserPosts();
     } else {
       fetchPosts();
@@ -152,8 +157,10 @@ export default function Feed({ firstName, onProfile }) {
         setCountPost((prevCount) => prevCount + 1);
       } else {
         setOpen(false);
-        isSetOpen(true);
-        //fetchUserPosts(); // Fetch user-specific posts
+        fetchUserPosts(); // Fetch user-specific posts
+        //setPosts((prevNewPosts) => [...newPosts, ...prevNewPosts]);
+        //setShowNewPosts(newPosts);
+        //setNewPosts([]);
         setCountPost(0);
       }
     } else {
@@ -163,17 +170,17 @@ export default function Feed({ firstName, onProfile }) {
     }
   }, [newPosts]);
 
-  // useEffect(() => {
-  //   console.log(showNewPosts);
-  // }, [showNewPosts]);
+  useEffect(() => {
+    console.log(showNewPosts);
+  }, [showNewPosts]);
 
-  // useEffect(() => {
-  //   console.log(posts);
-  // }, [posts]);
+  useEffect(() => {
+    console.log(posts);
+  }, [posts]);
 
-  // useEffect(() => {
-  //   console.log(message);
-  // }, [message]);
+  useEffect(() => {
+    console.log(message);
+  }, [message]);
 
   useEffect(() => {
     setMessage({
@@ -193,7 +200,6 @@ export default function Feed({ firstName, onProfile }) {
       open: false,
     }));
   };
-  
   const handleCloseC = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -213,6 +219,7 @@ export default function Feed({ firstName, onProfile }) {
   useEffect(() => {
     const source = axios.CancelToken.source();
     const socket = io.connect(process.env.PATH_ID);
+
     const fetchPosts = async () => {
       try {
         const currentTime = new Date().getTime();
@@ -253,7 +260,6 @@ export default function Feed({ firstName, onProfile }) {
         const currentTime = new Date().getTime();
 
         //setLoading(true);
-        isSetOpen(false);
         const res = await axios.get(
           `${path}/api/posts/user/${firstName}/date`,
           {
@@ -285,6 +291,7 @@ export default function Feed({ firstName, onProfile }) {
     } else {
       fetchPosts();
     }
+
     socket.on("newPost", handleNewPost);
 
     return () => {
@@ -338,7 +345,7 @@ export default function Feed({ firstName, onProfile }) {
           setNewPosts(filteredPosts);
           setLoading(false); // ปิดสถานะ loading
         });
-      return unsubscribe;
+        return unsubscribe
     } catch (error) {}
   }, []);
 
@@ -370,13 +377,13 @@ export default function Feed({ firstName, onProfile }) {
               >
                 Refresh
               </Button>
-              <IconButton onClick={handleCloseC} color="inherit" size="small">
+              <IconButton onClick={handleClose} color="inherit" size="small">
                 <CloseIcon fontSize="inherit" />
               </IconButton>
             </>
           }
         >
-          {`You have ${countPost} new post(s).`}
+          {`You have ${newPosts.length} new post(s).`}
         </Alert>
       </Snackbar>
       <SnackbarProvider maxSnack={3}>
@@ -407,11 +414,9 @@ export default function Feed({ firstName, onProfile }) {
             </div>
           ) : (
             <>
-              {Open
-                ? newPosts.map((p, i) => (
-                    <Post key={i} isPost={p} indexPost={i} />
-                  ))
-                : null}
+              {/* {newPosts.map((p, i) => (
+                <Post key={i} isPost={p} indexPost={i} />
+              ))} */}
               {posts.map((p, i) => (
                 <Post key={i} isPost={p} indexPost={i} />
               ))}

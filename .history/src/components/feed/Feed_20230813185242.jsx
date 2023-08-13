@@ -163,17 +163,17 @@ export default function Feed({ firstName, onProfile }) {
     }
   }, [newPosts]);
 
-  // useEffect(() => {
-  //   console.log(showNewPosts);
-  // }, [showNewPosts]);
+  useEffect(() => {
+    console.log(showNewPosts);
+  }, [showNewPosts]);
 
-  // useEffect(() => {
-  //   console.log(posts);
-  // }, [posts]);
+  useEffect(() => {
+    console.log(posts);
+  }, [posts]);
 
-  // useEffect(() => {
-  //   console.log(message);
-  // }, [message]);
+  useEffect(() => {
+    console.log(message);
+  }, [message]);
 
   useEffect(() => {
     setMessage({

@@ -73,12 +73,12 @@ export default function Share({ onNewPost }) {
     });
 
     socket.on("connect", () => {
-      //console.log("Socket connected!");
+      console.log("Socket connected!");
       setSocketConnected(true);
     });
 
     socket.on("disconnect", (reason) => {
-      ///console.warn("Socket disconnected:", reason);
+      console.warn("Socket disconnected:", reason);
     });
 
     return () => {

@@ -10,6 +10,13 @@ import io from "socket.io-client";
 import Cookies from "js-cookie";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import Fade from "@mui/material/Fade";
+import Paper from "@mui/material/Paper";
+import Popper from "@mui/material/Popper";
+import Fab from "@mui/material/Fab";
+import AddIcon from "@mui/icons-material/Add";
+import Typography from "@mui/material/Typography";
+import Chip from "@mui/material/Chip";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
@@ -42,11 +49,9 @@ const path = process.env.REACT_APP_PATH_ID;
 export default function Feed({ firstName, onProfile }) {
   const [posts, setPosts] = useState([]);
   const [newPosts, setNewPosts] = useState([]);
-  const [showNewPosts, setShowNewPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState(false);
-  const [Open, isSetOpen] = useState(false);
   const [placement, setPlacement] = useState();
   const [countPost, setCountPost] = useState(0);
   const token = Cookies.get("token");
@@ -68,8 +73,7 @@ export default function Feed({ firstName, onProfile }) {
     const source = axios.CancelToken.source();
     try {
       const currentTime = new Date().getTime();
-      setLoading(true);
-      isSetOpen(false);
+      //setLoading(true);
       const res = await axios.get(`${path}/api/posts/${user.member_id}/date`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -95,16 +99,15 @@ export default function Feed({ firstName, onProfile }) {
         console.log(err);
       }
     } finally {
-      setLoading(false);
-      setOpen(false);
+      //setLoading(false);
     }
   };
 
   const fetchUserPosts = async () => {
     try {
       const currentTime = new Date().getTime();
-      isSetOpen(false);
-      setLoading(true);
+
+      //setLoading(true);
       const res = await axios.get(`${path}/api/posts/user/${firstName}/date`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -125,15 +128,17 @@ export default function Feed({ firstName, onProfile }) {
       console.log(error);
     } finally {
       setLoading(false);
-      setOpen(false);
     }
   };
 
   const handleRefresh = (key) => {
     closeSnackbar(key);
 
+    setOpen(false);
+
     if (onProfile) {
-      fetchUserPosts();
+      //fetchUserPosts();
+      setPosts((prevPosts) => [newPosts, ...prevPosts]);
     } else {
       fetchPosts();
     }
@@ -142,38 +147,24 @@ export default function Feed({ firstName, onProfile }) {
   useEffect(() => {
     console.log(newPosts);
     if (newPosts.length > 0) {
-      // Check if any new post has a different member_id than the user
-      const hasDifferentMemberId = newPosts.some(
-        (post) => post.member_id !== user.member_id
-      );
-
-      if (hasDifferentMemberId) {
+      if (newPosts.member_id !== user.member_id) {
         setOpen(true);
         setCountPost((prevCount) => prevCount + 1);
       } else {
         setOpen(false);
-        isSetOpen(true);
-        //fetchUserPosts(); // Fetch user-specific posts
+        fetchUserPosts();
+        setPosts((prevPosts) => [newPosts, ...prevPosts]);
         setCountPost(0);
       }
     } else {
       setOpen(false);
       setCountPost(0);
-      setShowNewPosts([]);
     }
   }, [newPosts]);
 
-  // useEffect(() => {
-  //   console.log(showNewPosts);
-  // }, [showNewPosts]);
-
-  // useEffect(() => {
-  //   console.log(posts);
-  // }, [posts]);
-
-  // useEffect(() => {
-  //   console.log(message);
-  // }, [message]);
+  useEffect(() => {
+    console.log(message);
+  }, [message]);
 
   useEffect(() => {
     setMessage({
@@ -193,19 +184,12 @@ export default function Feed({ firstName, onProfile }) {
       open: false,
     }));
   };
-  
-  const handleCloseC = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpen(false);
-  };
 
   const handleNewPost = (newPost) => {
     if (user && user.member_id) {
       const postData = newPost.data();
       if (postData && postData.member_id) {
-        setPosts((prevPosts) => [...newPosts, ...prevPosts]);
+        setNewPosts((prevPosts) => [newPost, ...prevPosts]);
       }
     }
   };
@@ -213,6 +197,7 @@ export default function Feed({ firstName, onProfile }) {
   useEffect(() => {
     const source = axios.CancelToken.source();
     const socket = io.connect(process.env.PATH_ID);
+
     const fetchPosts = async () => {
       try {
         const currentTime = new Date().getTime();
@@ -253,7 +238,6 @@ export default function Feed({ firstName, onProfile }) {
         const currentTime = new Date().getTime();
 
         //setLoading(true);
-        isSetOpen(false);
         const res = await axios.get(
           `${path}/api/posts/user/${firstName}/date`,
           {
@@ -285,6 +269,7 @@ export default function Feed({ firstName, onProfile }) {
     } else {
       fetchPosts();
     }
+
     socket.on("newPost", handleNewPost);
 
     return () => {
@@ -335,10 +320,10 @@ export default function Feed({ firstName, onProfile }) {
               }
               return false;
             });
+
           setNewPosts(filteredPosts);
           setLoading(false); // ปิดสถานะ loading
         });
-      return unsubscribe;
     } catch (error) {}
   }, []);
 
@@ -352,7 +337,7 @@ export default function Feed({ firstName, onProfile }) {
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         open={open}
         autoHideDuration={6000}
-        onClose={handleCloseC}
+        onClose={handleClose}
         key={"topcenter"}
       >
         <Alert
@@ -370,13 +355,13 @@ export default function Feed({ firstName, onProfile }) {
               >
                 Refresh
               </Button>
-              <IconButton onClick={handleCloseC} color="inherit" size="small">
+              <IconButton onClick={handleClose} color="inherit" size="small">
                 <CloseIcon fontSize="inherit" />
               </IconButton>
             </>
           }
         >
-          {`You have ${countPost} new post(s).`}
+          {`You have ${newPosts.length} new post(s).`}
         </Alert>
       </Snackbar>
       <SnackbarProvider maxSnack={3}>
@@ -407,11 +392,6 @@ export default function Feed({ firstName, onProfile }) {
             </div>
           ) : (
             <>
-              {Open
-                ? newPosts.map((p, i) => (
-                    <Post key={i} isPost={p} indexPost={i} />
-                  ))
-                : null}
               {posts.map((p, i) => (
                 <Post key={i} isPost={p} indexPost={i} />
               ))}
