@@ -1,18 +1,10 @@
 import React, { useState, useEffect } from "react";
-import Link from "@mui/material/Link";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
 import Chip from "@mui/material/Chip";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import Avatar from '@mui/material/Avatar';
 import { DataGrid } from "@mui/x-data-grid";
-import axios from "axios";
-import Title from "./Title";
 import Cookies from "js-cookie";
-import FromTypePet from "./FromTypePets";
+import FromTypePet from "../dashboard/FromTypePets";
 import firebase from "firebase/compat/app";
 import "firebase/firestore";
 import "firebase/database";
@@ -28,19 +20,16 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-
 const firestore = firebase.firestore();
+const usersCollection = firestore.collection("Users");
 
-const path = process.env.REACT_APP_PATH_ID;
-const typePetsCollection = firestore.collection("TypePets");
-
-function geteData(id, imgPet, nameType, status) {
-  return { id, imgPet, nameType, status };
+function geteData(id, profilePicture, firstName, lastName, email, statusUser, status) {
+  return { id, profilePicture, firstName, lastName, email, statusUser, status };
 }
 
 const updateTypePetStatus = async (id, newStatus) => {
     try {
-      await typePetsCollection.doc(id).update({
+      await usersCollection.doc(id).update({
         status: newStatus,
       });
       //console.log("Status updated successfully!");
@@ -51,20 +40,34 @@ const updateTypePetStatus = async (id, newStatus) => {
 
 const columns = [
   {
-    field: "imgPet",
-    headerName: "IMAGE",
+    field: "profilePicture",
+    headerName: "Profile",
     width: 100,
     renderCell: (params) => (
-      <img
-        src={params.value}
-        alt=""
-        style={{ width: "100%", height: "auto" }}
-      />
+      <Avatar alt="Remy Sharp" src={params.value ?? "assets/person/noAvatar.png"} />
     ),
   },
   {
-    field: "nameType",
-    headerName: "Name Type",
+    field: "firstName",
+    headerName: "First Name",
+    width: 90,
+    editable: true,
+  },
+  {
+    field: "lastName",
+    headerName: "Last Name",
+    width: 90,
+    editable: true,
+  },
+  {
+    field: "email",
+    headerName: "Email",
+    width: 90,
+    editable: true,
+  },
+  {
+    field: "statusUser",
+    headerName: "Email",
     width: 90,
     editable: true,
   },
@@ -78,7 +81,7 @@ const columns = [
           label={params.value ? "Active" : "Inactive"}
           color={params.value ? "success" : "error"}
           onClick={() => {
-            const newStatus = !params.value; // สลับสถานะ
+            const newStatus = "blog";
             updateTypePetStatus(params.row.id, newStatus);
           }}
         />
@@ -90,57 +93,15 @@ function preventDefault(event) {
   event.preventDefault();
 }
 
-export default function TableTypePet() {
+export default function MemberSection () {
   const token = Cookies.get("token");
   const [rows, setRows] = useState([]);
   const [newType, setNewType] = useState([]);
   const [selectedTypePet, setSelectedTypePet] = useState(null);
 
- 
-//   useEffect(() => {
-//     console.log(rows);
-//     console.log("newType", newType);
-//   }, [rows]);
-
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       const source = axios.CancelToken.source();
-
-//       try {
-//         const res = await axios.get(`${path}/api/typePets`, {
-//           headers: {
-//             Authorization: `Bearer ${token}`,
-//           },
-//           cancelToken: source.token,
-//         });
-
-//         let data = [];
-//         let dataRows = res.data;
-//         dataRows.map((tag) => {
-//           data.push(
-//             geteData(tag.id_TypePet, tag.imgPet, tag.nameType, tag.status)
-//           );
-//         });
-
-//         setRows(data);
-//       } catch (err) {
-//         if (axios.isCancel(err)) {
-//           // Handle request cancellation (optional)
-//         } else {
-//           console.log(err);
-//         }
-//       } finally {
-//         // Make sure to clean up the cancel token if needed
-//         // For example: source.cancel();
-//       }
-//     };
-
-//     fetchData();
-//   }, []);
-
   useEffect(() => {
     try {
-      const unsubscribe = typePetsCollection.onSnapshot(async (snapshot) => {
+      const unsubscribe = usersCollection.onSnapshot(async (snapshot) => {
         const updatedTypePets = await Promise.all(
           snapshot.docs.map(async (doc) => {
             const typePetData = doc.data();
@@ -153,15 +114,15 @@ export default function TableTypePet() {
 
         let data = [];
         let dataRows = updatedTypePets;
-        dataRows.map((tag) => {
-          data.push(
-            geteData(tag.id_TypePet, tag.imgPet, tag.nameType, tag.status)
-          );
-        });
+        // dataRows.map((tag) => {
+        //   data.push(
+        //     geteData(tag.id_TypePet, tag.imgPet, tag.nameType, tag.status)
+        //   );
+        // });
 
-        setRows(data);
+        // setRows(data);
 
-        setNewType(updatedTypePets);
+        // setNewType(updatedTypePets);
       });
       return unsubscribe;
     } catch (error) {
@@ -171,13 +132,12 @@ export default function TableTypePet() {
 
   return (
     <React.Fragment>
-      <FromTypePet selectedTypePet={selectedTypePet} />
+      {/* <FromTypePet selectedTypePet={selectedTypePet} /> */}
       <Box sx={{ maxHeight: 400, width: "100%" }}>
         <DataGrid
           rows={rows}
           columns={columns}
           onRowClick={(params) => {
-            // ส่งข้อมูล TypePet ไปยังคอมโพเนนต์ FromTypePets
             setSelectedTypePet(params.row);
           }}
           initialState={{
