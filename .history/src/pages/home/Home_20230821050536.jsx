@@ -6,7 +6,11 @@ import { Rightbar } from "../../components/rightbar/Rightbar";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { ThemeProvider, createTheme, responsiveFontSizes } from "@mui/material";
+import {
+  ThemeProvider,
+  createTheme,
+  responsiveFontSizes,
+} from "@mui/material";
 import "./home.css";
 
 let theme = createTheme({
@@ -31,6 +35,7 @@ theme = createTheme(theme, {
 
 theme = responsiveFontSizes(theme);
 
+
 export default function Home() {
   const handleScrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -38,36 +43,35 @@ export default function Home() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ width: "100%" }}>
-        <Topbar />
-        <div className="homeContainer">
-          <Box
-            sx={{ display: { xs: "none", sm: "block", md: "block" } }}
-            position="sticky"
-          >
-            <Sidebar />
-          </Box>
-          <Feed sort={"date"} />
-          <Box sx={{ display: { xs: "none", sm: "block", md: "block" } }}>
-            <Rightbar />
-          </Box>
-          <IconButton
-            onClick={handleScrollToTop}
-            sx={{
-              position: "fixed",
-              bottom: "20px",
-              right: "20px",
-              zIndex: 1000,
-              backgroundColor: "#fff",
-              "&:hover": {
-                backgroundColor: "#ddd",
-              },
-            }}
-          >
-            <KeyboardArrowUpIcon />
-          </IconButton>
-        </div>
-      </Box>
-    </ThemeProvider>
+    <Box sx={{ width: "100%" }}>
+      <Topbar />
+      <div className="homeContainer">
+        <Box
+          sx={{ display: { xs: "none", sm: "block", md: "block" } }}
+          position="sticky"
+        >
+          <Sidebar />
+        </Box>
+        <Feed sort={"date"} />
+        <Box sx={{ display: { xs: "none", sm: "block", md: "block" } }}>
+          <Rightbar />
+        </Box>
+        <IconButton
+          onClick={handleScrollToTop}
+          sx={{
+            position: "fixed",
+            bottom: "20px",
+            right: "20px",
+            zIndex: 1000,
+            backgroundColor: "#fff",
+            "&:hover": {
+              backgroundColor: "#ddd",
+            },
+          }}
+        >
+          <KeyboardArrowUpIcon />
+        </IconButton>
+      </div>
+    </Box>
   );
 }
