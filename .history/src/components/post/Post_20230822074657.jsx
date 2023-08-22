@@ -170,18 +170,13 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-            cancelToken: source.token, // ระบุ token สำหรับการยกเลิก
           }
         );
         setComments(resComments.data);
         setLoadingComment(true);
       } catch (err) {
-        if (axios.isCancel(err)) {
-          console.log("Request canceled:", err.message); // แสดงข้อความถ้า request ถูกยกเลิก
-        } else {
-          dispatch(Messageupdate("Failed comments post.", true, "error"));
-          console.log(err);
-        }
+        dispatch(Messageupdate("Failed comments post.", true, "error"));
+        console.log(err);
       } finally {
         setLoadingComment(false);
       }
@@ -191,9 +186,9 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
     handlePostUpdate(onPostUpdate);
 
     return () => {
-      source.cancel("Component unmounted"); // ยกเลิก request ในกรณีที่ component ถูก unmount
+      source.cancel("Component unmounted");
     };
-  }, []);
+  }, [post.member_id, post.id]);
 
   // console.log("Comments=", comments);
 
@@ -493,8 +488,8 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
       );
       //console.log(err);
     } finally {
-      handleCloseComment();
       setLoadingComment(false);
+      handleClose();
       dispatch(Messageupdate("Delete comments successfully.", true, "success"));
     }
   };

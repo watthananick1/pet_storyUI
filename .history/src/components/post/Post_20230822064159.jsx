@@ -18,12 +18,6 @@ import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
 
 import {
   Card,
@@ -170,18 +164,13 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-            cancelToken: source.token, // ระบุ token สำหรับการยกเลิก
           }
         );
         setComments(resComments.data);
         setLoadingComment(true);
       } catch (err) {
-        if (axios.isCancel(err)) {
-          console.log("Request canceled:", err.message); // แสดงข้อความถ้า request ถูกยกเลิก
-        } else {
-          dispatch(Messageupdate("Failed comments post.", true, "error"));
-          console.log(err);
-        }
+        dispatch(Messageupdate("Failed comments post.", true, "error"));
+        console.log(err);
       } finally {
         setLoadingComment(false);
       }
@@ -191,9 +180,9 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
     handlePostUpdate(onPostUpdate);
 
     return () => {
-      source.cancel("Component unmounted"); // ยกเลิก request ในกรณีที่ component ถูก unmount
+      source.cancel("Component unmounted");
     };
-  }, []);
+  }, [post.member_id, post.id]);
 
   // console.log("Comments=", comments);
 
@@ -232,7 +221,6 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
   };
 
   const handlePostUpdate = (updatedPost, type) => {
-    setLoadingComment(true);
     if (type === "Post") {
       setPost({ ...updatedPost, ...post });
     } else if (type === "Comment") {
@@ -242,7 +230,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
 
       if (updatedCommentIndex === -1) {
         // Comment is not present in the comments array, add it
-        setComments((prevComments) => [...prevComments, ...updatedPost]);
+        setComments((prevComments) => [...prevComments, updatedPost]);
       } else {
         // Comment is already present, update it
         setComments((prevComments) => {
@@ -253,9 +241,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
       }
     } else if (type === "Add Comment") {
       // Handle added comment
-      // setComments((prevComments) => [...prevComments, ...updatedPost]);
-      // console.log("updatedPost", updatedPost);
-      setLoadingComment(false);
+      setComments((prevComments) => [...prevComments, updatedPost]);
     } else {
       // console.log("Invalid type: ", type);
     }
@@ -430,29 +416,6 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
     handleCloseComment();
   };
 
-  useEffect(() => {
-    const fetchComments = async () => {
-      try {
-        const resComments = await axios.get(
-          `${path}/api/comments/${post.id}/Comments`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setComments(resComments.data);
-        setLoadingComment(true);
-      } catch (err) {
-        dispatch(Messageupdate("Failed comments post.", true, "error"));
-        console.log(err);
-      } finally {
-        setLoadingComment(false);
-      }
-    };
-    fetchComments();
-  }, []);
-
   const handleDeleteComment = async () => {
     //console.log(`Delete Comment ${commentIdToDelete}`);
     const requestBody = {
@@ -493,8 +456,8 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
       );
       //console.log(err);
     } finally {
-      handleCloseComment();
       setLoadingComment(false);
+      handleClose();
       dispatch(Messageupdate("Delete comments successfully.", true, "success"));
     }
   };
@@ -651,113 +614,89 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
             </div>
           ) : (
             <CardContent>
-              {comments
-                .slice(
-                  0,
-                  showAllComments ? comments.length : maxDisplayedComments
-                )
-                .map((C, index) => {
-                  return (
-                    <>
-                      <List
-                        sx={{
-                          width: "100%",
-                          maxWidth: 360,
-                          bgcolor: "background.paper",
-                          position: "relative",
-                          overflow: "auto",
-                          maxHeight: 300,
-                          "& ul": { padding: 0 },
-                        }}
-                        subheader={<li />}
-                        key={index}
-                      >
-                        <ListItem
-                          alignItems="flex-start"
-                          secondaryAction={
-                            <>
-                              <MoreHoriz
-                                fontSize="small"
-                                onClick={(event) =>
-                                  handleClickComment(event, C.id)
-                                }
+                {comments
+                  .slice(
+                    0,
+                    showAllComments ? comments.length : maxDisplayedComments
+                  )
+                  .map((comment, index) => {
+                    return (
+                      <div key={index} className="postComment">
+                        <div >
+                          <CardHeader
+                            avatar={
+                              <Avatar
+                                aria-label="recipe"
+                                src={comment?.profilePicture}
+                                sx={{ width: "39px", height: "39px" }}
                               />
-                              <Menu
-                                anchorEl={anchorElComment || undefined}
-                                open={Boolean(anchorElComment)}
-                                onClose={handleCloseComment}
-                              >
-                                {user.member_id === commentIdUser ? (
-                                  [
-                                    <MenuItem
-                                      key="edit"
-                                      onClick={handleEditComment}
-                                    >
-                                      <span>
-                                        <EditIcon fontSize="small" />
-                                      </span>
-                                      <span>Edit</span>
-                                    </MenuItem>,
-                                    <MenuItem
-                                      key="delete"
-                                      onClick={handleDeleteComment}
-                                    >
-                                      <span>
-                                        <DeleteIcon fontSize="small" />
-                                      </span>
-                                      <span>Delete</span>
-                                    </MenuItem>,
-                                  ]
-                                ) : (
-                                  <MenuItem
-                                    key="report"
-                                    onClick={handleReportUser}
-                                  >
-                                    <span>
-                                      <ReportIcon fontSize="small" />
-                                    </span>
-                                    <span>Report User</span>
-                                  </MenuItem>
-                                )}
-                              </Menu>
-                            </>
-                          }
-                        >
-                          <ListItemAvatar>
-                            <Avatar
-                              aria-label="recipe"
-                              src={C?.profilePicture}
-                              sx={{ width: "39px", height: "39px" }}
-                            />
-                          </ListItemAvatar>
-                          <ListItemText
-                            primary={`${C?.firstName} ${C?.lastName}`}
-                            secondary={
+                            }
+                            title={`${comment?.firstName} ${comment?.lastName}`}
+                            subheader={`${comment.content}`}
+                            action={
                               <>
-                                <Typography
-                                  sx={{ display: "inline" }}
-                                  component="span"
-                                  variant="body2"
-                                  color="text.primary"
+                                <IconButton
+                                  onClick={(event) =>
+                                    handleClickComment(event, comment.id)
+                                  }
                                 >
-                                  {C.content}
-                                </Typography>
+                                  <MoreHoriz fontSize="small" />
+                                </IconButton>
                               </>
                             }
                           />
-                        </ListItem>
-                      </List>
-                    </>
-                  );
-                })}
-              <Divider />
-              <Button
-                sx={{ mt: 0.5 }}
-                variant="text"
-                onClick={() => submitComment()}
-              >
-                Comment
-              </Button>
+                          <CardContent>
+                            <Menu
+                              anchorEl={anchorElComment || undefined}
+                              open={Boolean(anchorElComment)}
+                              onClose={handleCloseComment}
+                            >
+                              {user.member_id === commentIdUser ? (
+                                [
+                                  <MenuItem
+                                    key="edit"
+                                    onClick={handleEditComment}
+                                  >
+                                    <span>
+                                      <EditIcon fontSize="small" />
+                                    </span>
+                                    <span>Edit</span>
+                                  </MenuItem>,
+                                  <MenuItem
+                                    key="delete"
+                                    onClick={handleDeleteComment}
+                                  >
+                                    <span>
+                                      <DeleteIcon fontSize="small" />
+                                    </span>
+                                    <span>Delete</span>
+                                  </MenuItem>,
+                                ]
+                              ) : (
+                                <MenuItem
+                                  key="report"
+                                  onClick={handleReportUser}
+                                >
+                                  <span>
+                                    <ReportIcon fontSize="small" />
+                                  </span>
+                                  <span>Report User</span>
+                                </MenuItem>
+                              )}
+                            </Menu>
+                          </CardContent>
+                        </div>
+                      </div>
+                    );
+                  })}
+                <Divider />
+                <Button
+                  sx={{ mt: 2 }}
+                  variant="text"
+                  onClick={() => submitComment()}
+                >
+                  Comment
+                </Button>
             </CardContent>
           )}
         </Collapse>

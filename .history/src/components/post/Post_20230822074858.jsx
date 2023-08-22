@@ -161,7 +161,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
 
   useEffect(() => {
     const source = axios.CancelToken.source();
-
+  
     const fetchComments = async () => {
       try {
         const resComments = await axios.get(
@@ -186,14 +186,15 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
         setLoadingComment(false);
       }
     };
-
+  
     fetchComments();
     handlePostUpdate(onPostUpdate);
-
+  
     return () => {
       source.cancel("Component unmounted"); // ยกเลิก request ในกรณีที่ component ถูก unmount
     };
   }, []);
+  
 
   // console.log("Comments=", comments);
 
@@ -493,8 +494,8 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
       );
       //console.log(err);
     } finally {
-      handleCloseComment();
       setLoadingComment(false);
+      handleClose();
       dispatch(Messageupdate("Delete comments successfully.", true, "success"));
     }
   };

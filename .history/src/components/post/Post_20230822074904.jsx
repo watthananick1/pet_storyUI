@@ -493,8 +493,8 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
       );
       //console.log(err);
     } finally {
-      handleCloseComment();
       setLoadingComment(false);
+      handleClose();
       dispatch(Messageupdate("Delete comments successfully.", true, "success"));
     }
   };
