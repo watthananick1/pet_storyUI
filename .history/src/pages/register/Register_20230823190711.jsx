@@ -51,6 +51,8 @@ export default function SignUp() {
     useState(false);
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [password, setPassword] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [firstName, setFirstName] = useState("");
   const [email, setIsEmail] = useState("");
   const [passwordConfirmError, setPasswordConfirmError] = useState(true);
   const [passwordError, setPasswordError] = useState(true);
@@ -98,7 +100,6 @@ export default function SignUp() {
     setPasswordError(isValidPassword(password));
   };
   const handleEmailChange = (email) => {
-    setIsEmail(email);
     setEmailError(isValidEmail(email));
   };
 

@@ -51,6 +51,8 @@ export default function SignUp() {
     useState(false);
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [password, setPassword] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [firstName, setFirstName] = useState("");
   const [email, setIsEmail] = useState("");
   const [passwordConfirmError, setPasswordConfirmError] = useState(true);
   const [passwordError, setPasswordError] = useState(true);
@@ -71,6 +73,23 @@ export default function SignUp() {
       return dayjs(date).format("YYYY-MM-DD");
     }
     return "";
+  };
+
+  const isValidFirstName = (firstName) => {
+    if (!firstName.trim()) {
+      return false;
+    }
+
+    return true;
+  };
+
+  const isValidLastName = (lastName) => {
+    
+    if (!lastName.trim()) {
+      return false;
+    }
+
+    return true;
   };
 
   const isValidPassword = (password) => {
@@ -98,7 +117,6 @@ export default function SignUp() {
     setPasswordError(isValidPassword(password));
   };
   const handleEmailChange = (email) => {
-    setIsEmail(email);
     setEmailError(isValidEmail(email));
   };
 
@@ -240,7 +258,13 @@ export default function SignUp() {
                   fullWidth
                   id="firstName"
                   label="First Name"
-                  helperText={ "ตัวอย่าง: สุดา"}
+                  error={!passwordError}
+                  helperText={
+                    !passwordError
+                      ? "กรุณากรอกชื่อ"
+                      : "ตัวอย่าง: สุดา"
+                  }
+                  onChange={(e) => handlePasswordChange(e.target.value)}
                   autoFocus
                 />
               </Grid>
@@ -252,8 +276,14 @@ export default function SignUp() {
                   label="Last Name"
                   name="lastName"
                   autoComplete="family-name"
+                  error={!isValidLastName(l)}
+                  helperText={
+                    !passwordError
+                      ? "กรุณากรอกนามสกุล"
+                      : "ตัวอย่าง: สุขใจ"
+                  }
+                  onChange={(e) => setLastName(e.target.value)}
                   autoFocus
-                  helperText={"ตัวอย่าง: สุขใจ"}
                 />
               </Grid>
               <Grid item xs={12}>

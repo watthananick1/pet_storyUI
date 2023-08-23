@@ -54,6 +54,8 @@ export default function SignUp() {
   const [email, setIsEmail] = useState("");
   const [passwordConfirmError, setPasswordConfirmError] = useState(true);
   const [passwordError, setPasswordError] = useState(true);
+  const [lastNameError, setLastNameError] = useState(true);
+  const [firstNameError, setFirstNameError] = useState(true);
   const [emailError, setEmailError] = useState(true);
   const [selectedDate, setSelectedDate] = useState(null);
   const { dispatch } = useContext(AuthContext);
@@ -71,6 +73,22 @@ export default function SignUp() {
       return dayjs(date).format("YYYY-MM-DD");
     }
     return "";
+  };
+
+  const isValidFirstName = (firstName) => {
+    if (!firstName.trim()) {
+      return false;
+    }
+
+    return true;
+  };
+
+  const isValidLastName = (lastName) => {
+    if (!lastName.trim()) {
+      return false;
+    }
+
+    return true;
   };
 
   const isValidPassword = (password) => {
@@ -98,7 +116,6 @@ export default function SignUp() {
     setPasswordError(isValidPassword(password));
   };
   const handleEmailChange = (email) => {
-    setIsEmail(email);
     setEmailError(isValidEmail(email));
   };
 
@@ -240,7 +257,6 @@ export default function SignUp() {
                   fullWidth
                   id="firstName"
                   label="First Name"
-                  helperText={ "ตัวอย่าง: สุดา"}
                   autoFocus
                 />
               </Grid>
@@ -252,8 +268,6 @@ export default function SignUp() {
                   label="Last Name"
                   name="lastName"
                   autoComplete="family-name"
-                  autoFocus
-                  helperText={"ตัวอย่าง: สุขใจ"}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -271,7 +285,6 @@ export default function SignUp() {
                       : "ตัวอย่าง: example@example.com"
                   }
                   onChange={(e) => handleEmailChange(e.target.value)}
-                  autoFocus
                 />
               </Grid>
               <Grid item xs={12}>
@@ -290,7 +303,6 @@ export default function SignUp() {
                       : "รหัสผ่านควรมีอักษร 6-16 ตัว (A-Z) ตัวอักษรพิมพ์เล็ก (a-z) ตัวเลข 0-9 และสัญลักษณ์ !@#$%^ &*()_+|~-=`{}[]:”;'<>?,./"
                   }
                   onChange={(e) => handlePasswordChange(e.target.value)}
-                  autoFocus
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
@@ -316,7 +328,6 @@ export default function SignUp() {
                   id="passwordConfirmation"
                   autoComplete="new-password"
                   value={passwordConfirmation}
-                  autoFocus
                   onChange={(e) => isValidPasswordConfirm(e.target.value)}
                   error={!passwordConfirmError}
                   helperText={

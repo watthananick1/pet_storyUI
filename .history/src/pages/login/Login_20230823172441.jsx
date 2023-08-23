@@ -156,7 +156,8 @@ export default function SignInSide() {
   };
   
   const isValidPassword = (password) => {
-
+    // Check if password has at least 8 characters
+    // You can add more conditions based on your requirements
     return password.length >= 6;
   };
 

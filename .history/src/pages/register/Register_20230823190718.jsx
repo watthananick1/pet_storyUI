@@ -98,7 +98,6 @@ export default function SignUp() {
     setPasswordError(isValidPassword(password));
   };
   const handleEmailChange = (email) => {
-    setIsEmail(email);
     setEmailError(isValidEmail(email));
   };
 

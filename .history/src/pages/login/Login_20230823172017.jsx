@@ -154,11 +154,6 @@ export default function SignInSide() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
-  
-  const isValidPassword = (password) => {
-
-    return password.length >= 6;
-  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();

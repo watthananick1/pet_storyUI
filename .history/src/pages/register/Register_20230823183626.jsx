@@ -54,6 +54,8 @@ export default function SignUp() {
   const [email, setIsEmail] = useState("");
   const [passwordConfirmError, setPasswordConfirmError] = useState(true);
   const [passwordError, setPasswordError] = useState(true);
+  const [lastNameError, setLastNameError] = useState(true);
+  const [firstNameError, setFirstNameError] = useState(true);
   const [emailError, setEmailError] = useState(true);
   const [selectedDate, setSelectedDate] = useState(null);
   const { dispatch } = useContext(AuthContext);
@@ -98,7 +100,6 @@ export default function SignUp() {
     setPasswordError(isValidPassword(password));
   };
   const handleEmailChange = (email) => {
-    setIsEmail(email);
     setEmailError(isValidEmail(email));
   };
 
@@ -110,13 +111,13 @@ export default function SignUp() {
     const firstName = data.get("firstName");
     const lastName = data.get("lastName");
     const confirmedPassword = data.get("passwordConfirmation");
+
     if (
-      email.trim() &&
-      password.trim() &&
-      firstName.trim() &&
-      lastName.trim() &&
-      selectedDate !== null &&
-      selectedDate.trim()
+      !email &&
+      !password &&
+      !firstName &&
+      !lastName &&
+      selectedDate !== null
     ) {
       Swal.fire(
         "กรุณากรอกข้อมูล",
@@ -125,17 +126,7 @@ export default function SignUp() {
       );
       return;
     }
-
-    if (firstName.trim() || !lastName.trim()) {
-      Swal.fire(
-        "กรุณากรอกชื่อหรือนามสกุล",
-        "กรุณากรอกชื่อหรือนามสกุลให้ครบถ้วน ก่อน แล้วดำเนินการใหม่อีกครั้ง",
-        "warning"
-      );
-      return;
-    }
-
-    if (email.trim()) {
+    if (!email) {
       Swal.fire(
         "กรุณากรอก Email",
         "กรุณากรอก Email ก่อน แล้วดำเนินการใหม่อีกครั้ง",
@@ -143,10 +134,18 @@ export default function SignUp() {
       );
       return;
     }
-    if (password.trim()) {
+    if (!password) {
       Swal.fire(
         "กรุณากรอก Password",
         "กรุณากรอก Password ก่อน แล้วดำเนินการใหม่อีกครั้ง",
+        "warning"
+      );
+      return;
+    }
+    if (!firstName || !lastName) {
+      Swal.fire(
+        "กรุณากรอกชื่อหรือนามสกุล",
+        "กรุณากรอกชื่อหรือนามสกุลให้ครบถ้วน ก่อน แล้วดำเนินการใหม่อีกครั้ง",
         "warning"
       );
       return;
@@ -240,7 +239,6 @@ export default function SignUp() {
                   fullWidth
                   id="firstName"
                   label="First Name"
-                  helperText={ "ตัวอย่าง: สุดา"}
                   autoFocus
                 />
               </Grid>
@@ -252,8 +250,6 @@ export default function SignUp() {
                   label="Last Name"
                   name="lastName"
                   autoComplete="family-name"
-                  autoFocus
-                  helperText={"ตัวอย่าง: สุขใจ"}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -271,7 +267,6 @@ export default function SignUp() {
                       : "ตัวอย่าง: example@example.com"
                   }
                   onChange={(e) => handleEmailChange(e.target.value)}
-                  autoFocus
                 />
               </Grid>
               <Grid item xs={12}>
@@ -287,10 +282,9 @@ export default function SignUp() {
                   helperText={
                     !passwordError
                       ? "กรุณากรอกรหัสผ่านให้ถูกต้อง"
-                      : "รหัสผ่านควรมีอักษร 6-16 ตัว (A-Z) ตัวอักษรพิมพ์เล็ก (a-z) ตัวเลข 0-9 และสัญลักษณ์ !@#$%^ &*()_+|~-=`{}[]:”;'<>?,./"
+                      : "มีอักษร 6-16 ตัว (A-Z) ตัวอักษรพิมพ์เล็ก (a-z) ตัวเลข 0-9 และสัญลักษณ์ !@#$%^ &*()_+|~-=`{}[]:”;'<>?,./"
                   }
                   onChange={(e) => handlePasswordChange(e.target.value)}
-                  autoFocus
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
@@ -316,13 +310,12 @@ export default function SignUp() {
                   id="passwordConfirmation"
                   autoComplete="new-password"
                   value={passwordConfirmation}
-                  autoFocus
                   onChange={(e) => isValidPasswordConfirm(e.target.value)}
                   error={!passwordConfirmError}
                   helperText={
                     !passwordConfirmError
                       ? "กรุณากรอกยืนยันรหัสผ่านให้ถูกต้อง"
-                      : "กรุณากรอกยืนยันรหัสผ่านให้ตรงกับรหัสผ่าน"
+                      : "กรุณาใส่รหัสผ่านให้ตรงกัน"
                   }
                   InputProps={{
                     endAdornment: (
@@ -344,15 +337,15 @@ export default function SignUp() {
                   <DatePicker
                     format="DD/MM/YYYY"
                     value={selectedDate}
+                    helperText={
+                      !passwordConfirmError
+                        ? "กรุณากรอกยืนยันรหัสผ่านให้ถูกต้อง"
+                        : "เพื่อความถูกต้องกรุณาเลือกผ่านไอคอนปฏิทิน"
+                    }
                     onChange={handleDateChange}
                   />
-                  <Typography
-                    variant="caption"
-                    color="gray"
-                    display="block"
-                    gutterBottom
-                  >
-                    เพื่อความถูกต้องกรุณากรอกวันที่โดยเลือกผ่านไอคอนปฏิทิน
+                  <Typography variant="caption" display="block" gutterBottom>
+                    เพื่อความถูกต้องกรุณากรอกวันเลือกผ่านไอคอนปฏิทิน
                   </Typography>
                 </LocalizationProvider>
               </Grid>

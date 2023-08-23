@@ -154,11 +154,6 @@ export default function SignInSide() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
-  
-  const isValidPassword = (password) => {
-
-    return password.length >= 6;
-  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -174,16 +169,6 @@ export default function SignInSide() {
       );
       return;
     }
-    
-    if (!isValidEmail(email)) {
-      Swal.fire(
-        "อีเมลไม่ถูกต้อง",
-        "กรุณากรอกอีเมลให้ถูกต้อง",
-        "warning"
-      );
-      return;
-    }
-    
     if (!password) {
       Swal.fire(
         "กรุณากรอก Password",
