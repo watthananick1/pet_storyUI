@@ -774,6 +774,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
                         handleReportUser,
                       })}
                       </Collapse>
+                     
                     ))}
                 </TransitionGroup>
               </List>

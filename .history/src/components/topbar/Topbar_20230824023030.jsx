@@ -622,7 +622,7 @@ export default function PrimarySearchAppBar() {
             <Grid container spacing={0.5}>
               {allTypePets.map((typePet, index) =>
                 typePet.status !== false ? (
-                  <Grid item key={index} xs={12} sm={12} md={12} lg={12}>
+                  <Grid item key={index} xs={} sm={4} md={4} lg={4}>
                     <div
                       className="typePetCard"
                       style={{ backgroundImage: `url(${typePet.imgPet})` }}

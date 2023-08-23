@@ -165,70 +165,6 @@ export default function PrimarySearchAppBar() {
   const [allTypePets, setAllTypePets] = React.useState([]);
   const [allsetdata, setAllSetdata] = React.useState([]);
 
-  React.useEffect(() => {
-    const fetchUserPosts = async () => {
-      try {
-        const userSnapshot = await UsersCollection.doc(user.member_id).get();
-        const typeTags = userSnapshot.data().typePets;
-
-        const typePromises = typeTags.map(async (tag) => {
-          const typePetsSnapshot = await typePetsCollection
-            .where("nameType", "==", tag)
-            .get();
-
-          return typePetsSnapshot.docs.map((doc) => doc.data());
-        });
-
-        const typePetsData = await Promise.all(typePromises);
-        const mergedTypePets = typePetsData.flat();
-
-        setTypePets(mergedTypePets);
-
-        //console.log("Merged TypePets:", mergedTypePets);
-
-        // ทำอย่างอื่น ๆ กับ mergedTypePets ตามที่คุณต้องการ
-      } catch (error) {
-        console.error("Error fetching user posts:", error);
-      }
-    };
-
-    const fetchAllTypePets = async () => {
-      try {
-        const typePetsSnapshot = await typePetsCollection.get();
-        const typePetsData = typePetsSnapshot.docs.map((doc) => doc.data());
-
-        //console.log(typePetsData)
-
-        const filteredTypePets = typePetsData.filter(
-          (tag) => tag.status === true
-        );
-        //console.log("Filtered TypePets:", filteredTypePets);
-
-        setAllTypePets(filteredTypePets);
-      } catch (error) {
-        console.error("Error fetching type pets:", error);
-      }
-    };
-
-    fetchUserPosts();
-    fetchAllTypePets();
-  }, []);
-
-  React.useEffect(() => {
-    let tes = typePets;
-    //console.log("typePets", typePets);
-    //console.log("selectedTypes", selectedTypes);
-    let tagPet = [];
-    typePets.forEach((typePet) => {
-      typePets.some((type) => type.nameType === typePet.nameType);
-      tagPet.push(typePet.nameType);
-    });
-
-    let outs = [...tagPet, ...selectedTypes];
-    setAllSetdata(outs);
-    //console.log("OUT", outs);
-  }, [typePets, selectedTypes]);
-
   const handleClickOpen = (scrollType) => () => {
     setHomeopen(true);
     setScroll(scrollType);
@@ -622,7 +558,7 @@ export default function PrimarySearchAppBar() {
             <Grid container spacing={0.5}>
               {allTypePets.map((typePet, index) =>
                 typePet.status !== false ? (
-                  <Grid item key={index} xs={12} sm={12} md={12} lg={12}>
+                  <Grid item key={index} xs={4} sm={4} md={4} lg={4}>
                     <div
                       className="typePetCard"
                       style={{ backgroundImage: `url(${typePet.imgPet})` }}

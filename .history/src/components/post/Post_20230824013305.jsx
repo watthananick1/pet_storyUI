@@ -24,7 +24,6 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import { TransitionGroup } from "react-transition-group";
 
 import {
   Card,
@@ -69,84 +68,6 @@ firebase.initializeApp(firebaseConfig);
 
 const firestore = firebase.firestore();
 const path = process.env.REACT_APP_PATH_ID;
-
-function renderItem({
-  C,
-  handleClickComment,
-  anchorElComment,
-  handleCloseComment,
-  user,
-  commentIdUser,
-  handleEditComment,
-  handleDeleteComment,
-  handleReportUser,
-}) {
-  return (
-    <ListItem
-      alignItems="flex-start"
-      secondaryAction={
-        <>
-          <MoreHoriz
-            fontSize="small"
-            onClick={(event) => handleClickComment(event, C.id)}
-          />
-          <Menu
-            anchorEl={anchorElComment || undefined}
-            open={Boolean(anchorElComment)}
-            onClose={handleCloseComment}
-          >
-            {user.member_id === commentIdUser ? (
-              [
-                <MenuItem key="edit" onClick={handleEditComment}>
-                  <span>
-                    <EditIcon fontSize="small" />
-                  </span>
-                  <span>Edit</span>
-                </MenuItem>,
-                <MenuItem key="delete" onClick={handleDeleteComment}>
-                  <span>
-                    <DeleteIcon fontSize="small" />
-                  </span>
-                  <span>Delete</span>
-                </MenuItem>,
-              ]
-            ) : (
-              <MenuItem key="report" onClick={handleReportUser}>
-                <span>
-                  <ReportIcon fontSize="small" />
-                </span>
-                <span>Report User</span>
-              </MenuItem>
-            )}
-          </Menu>
-        </>
-      }
-    >
-      <ListItemAvatar>
-        <Avatar
-          aria-label="recipe"
-          src={C?.profilePicture}
-          sx={{ width: "39px", height: "39px" }}
-        />
-      </ListItemAvatar>
-      <ListItemText
-        primary={`${C?.firstName} ${C?.lastName}`}
-        secondary={
-          <>
-            <Typography
-              sx={{ display: "inline" }}
-              component="span"
-              variant="body2"
-              color="text.primary"
-            >
-              {C.content}
-            </Typography>
-          </>
-        }
-      />
-    </ListItem>
-  );
-}
 
 export default function Post({ isPost, onPostUpdate, indexPost }) {
   const { user, dispatch } = useContext(AuthContext);
@@ -239,41 +160,41 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
     setIsLiked(!isLiked);
   };
 
-  // useEffect(() => {
-  //   const source = axios.CancelToken.source();
+  useEffect(() => {
+    const source = axios.CancelToken.source();
 
-  //   const fetchComments = async () => {
-  //     try {
-  //       const resComments = await axios.get(
-  //         `${path}/api/comments/${post.id}/Comments`,
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${token}`,
-  //           },
-  //           cancelToken: source.token,
-  //         }
-  //       );
-  //       setComments(resComments.data);
-  //       setLoadingComment(true);
-  //     } catch (err) {
-  //       if (axios.isCancel(err)) {
-  //         console.log("Request canceled:", err.message);
-  //       } else {
-  //         dispatch(Messageupdate("Failed comments post.", true, "error"));
-  //         console.log(err);
-  //       }
-  //     } finally {
-  //       setLoadingComment(false);
-  //     }
-  //   };
+    const fetchComments = async () => {
+      try {
+        const resComments = await axios.get(
+          `${path}/api/comments/${post.id}/Comments`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            cancelToken: source.token,
+          }
+        );
+        setComments(resComments.data);
+        setLoadingComment(true);
+      } catch (err) {
+        if (axios.isCancel(err)) {
+          console.log("Request canceled:", err.message);
+        } else {
+          dispatch(Messageupdate("Failed comments post.", true, "error"));
+          console.log(err);
+        }
+      } finally {
+        setLoadingComment(false);
+      }
+    };
 
-  //   // fetchComments();
-  //   //handlePostUpdate(onPostUpdate);
+    // fetchComments();
+    //handlePostUpdate(onPostUpdate);
 
-  //   return () => {
-  //     source.cancel("Component unmounted");
-  //   };
-  // }, []);
+    return () => {
+      source.cancel("Component unmounted");
+    };
+  }, []);
 
   // console.log("Comments=", comments);
 
@@ -345,7 +266,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
         setComments(resComments.data);
       } catch (error) {
         console.error("Error fetching updated comments:", error);
-        setLoadingComment(false);
+        //setLoadingComment(false);
       } finally {
         setLoadingComment(false);
       }
@@ -540,7 +461,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
         // });
 
         setComments(resComments.data);
-        setLoadingComment(true);
+        //setLoadingComment(true);
       } catch (err) {
         dispatch(Messageupdate("Failed comments post.", true, "error"));
         console.log(err);
@@ -593,7 +514,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
       //console.log(err);
     } finally {
       handleCloseComment();
-      setLoadingComment(false);
+      //setLoadingComment(false);
       dispatch(Messageupdate("Delete comments successfully.", true, "success"));
     }
   };
@@ -740,54 +661,124 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
         </div>
         <Collapse in={showComments} timeout="auto" unmountOnExit>
           <hr className="PostHr" />
-          <CardContent>
-            <>
-              <List
-                sx={{
-                  width: "100%",
-                  maxWidth: 360,
-                  bgcolor: "background.paper",
-                  position: "relative",
-                  overflow: "auto",
-                  maxHeight: 300,
-                  "& ul": { padding: 0 },
-                }}
-                subheader={<li />}
+          {loadingComment ? (
+            <div className="loadingWrapper">
+              <ReactLoading
+                type="spin"
+                color="#6200E8"
+                height={"10%"}
+                width={"10%"}
+              />
+            </div>
+          ) : (
+            <CardContent>
+              {comments
+                .slice(
+                  0,
+                  showAllComments ? comments.length : maxDisplayedComments
+                )
+                .map((C, index) => (
+                  <>
+                    <List
+                      sx={{
+                        width: "100%",
+                        maxWidth: 360,
+                        bgcolor: "background.paper",
+                        position: "relative",
+                        overflow: "auto",
+                        maxHeight: 300,
+                        "& ul": { padding: 0 },
+                      }}
+                      subheader={<li />}
+                      key={index}
+                    >
+                      <ListItem
+                        alignItems="flex-start"
+                        secondaryAction={
+                          <>
+                            <MoreHoriz
+                              fontSize="small"
+                              onClick={(event) =>
+                                handleClickComment(event, C.id)
+                              }
+                            />
+                            <Menu
+                              anchorEl={anchorElComment || undefined}
+                              open={Boolean(anchorElComment)}
+                              onClose={handleCloseComment}
+                            >
+                              {user.member_id === commentIdUser ? (
+                                [
+                                  <MenuItem
+                                    key="edit"
+                                    onClick={handleEditComment}
+                                  >
+                                    <span>
+                                      <EditIcon fontSize="small" />
+                                    </span>
+                                    <span>Edit</span>
+                                  </MenuItem>,
+                                  <MenuItem
+                                    key="delete"
+                                    onClick={handleDeleteComment}
+                                  >
+                                    <span>
+                                      <DeleteIcon fontSize="small" />
+                                    </span>
+                                    <span>Delete</span>
+                                  </MenuItem>,
+                                ]
+                              ) : (
+                                <MenuItem
+                                  key="report"
+                                  onClick={handleReportUser}
+                                >
+                                  <span>
+                                    <ReportIcon fontSize="small" />
+                                  </span>
+                                  <span>Report User</span>
+                                </MenuItem>
+                              )}
+                            </Menu>
+                          </>
+                        }
+                      >
+                        <ListItemAvatar>
+                          <Avatar
+                            aria-label="recipe"
+                            src={C?.profilePicture}
+                            sx={{ width: "39px", height: "39px" }}
+                          />
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={`${C?.firstName} ${C?.lastName}`}
+                          secondary={
+                            <>
+                              <Typography
+                                sx={{ display: "inline" }}
+                                component="span"
+                                variant="body2"
+                                color="text.primary"
+                              >
+                                {C.content}
+                              </Typography>
+                            </>
+                          }
+                        />
+                      </ListItem>
+                    </List>
+                  </>
+                ))}
+              <Divider />
+              <Button
+                sx={{ mt: 0.5 }}
+                variant="text"
+                onClick={() => submitComment(post)}
               >
-                <TransitionGroup>
-                  {comments
-                    .slice(
-                      0,
-                      showAllComments ? comments.length : maxDisplayedComments
-                    )
-                    .map((C, index) => (
-                      <Collapse key={index}>
-                      {renderItem({
-                        C,
-                        handleClickComment,
-                        anchorElComment,
-                        handleCloseComment,
-                        user,
-                        commentIdUser,
-                        handleEditComment,
-                        handleDeleteComment,
-                        handleReportUser,
-                      })}
-                      </Collapse>
-                    ))}
-                </TransitionGroup>
-              </List>
-            </>
-
-            <Divider />
-            <Button
-              sx={{ mt: 0.5 }}
-              variant="text"
-              onClick={() => submitComment(post)}
-            >
-              Comment
-            </Button>
-          </CardContent>
+                Comment
+              </Button>
+            </CardContent>
+          )}
         </Collapse>
       </Paper>
       {openModal && (

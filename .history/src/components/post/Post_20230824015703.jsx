@@ -761,19 +761,80 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
                       showAllComments ? comments.length : maxDisplayedComments
                     )
                     .map((C, index) => (
-                      <Collapse key={index}>
-                      {renderItem({
-                        C,
-                        handleClickComment,
-                        anchorElComment,
-                        handleCloseComment,
-                        user,
-                        commentIdUser,
-                        handleEditComment,
-                        handleDeleteComment,
-                        handleReportUser,
-                      })}
-                      </Collapse>
+                      <ListItem
+                        alignItems="flex-start"
+                        secondaryAction={
+                          <>
+                            <MoreHoriz
+                              fontSize="small"
+                              onClick={(event) =>
+                                handleClickComment(event, C.id)
+                              }
+                            />
+                            <Menu
+                              anchorEl={anchorElComment || undefined}
+                              open={Boolean(anchorElComment)}
+                              onClose={handleCloseComment}
+                            >
+                              {user.member_id === commentIdUser ? (
+                                [
+                                  <MenuItem
+                                    key="edit"
+                                    onClick={handleEditComment}
+                                  >
+                                    <span>
+                                      <EditIcon fontSize="small" />
+                                    </span>
+                                    <span>Edit</span>
+                                  </MenuItem>,
+                                  <MenuItem
+                                    key="delete"
+                                    onClick={handleDeleteComment}
+                                  >
+                                    <span>
+                                      <DeleteIcon fontSize="small" />
+                                    </span>
+                                    <span>Delete</span>
+                                  </MenuItem>,
+                                ]
+                              ) : (
+                                <MenuItem
+                                  key="report"
+                                  onClick={handleReportUser}
+                                >
+                                  <span>
+                                    <ReportIcon fontSize="small" />
+                                  </span>
+                                  <span>Report User</span>
+                                </MenuItem>
+                              )}
+                            </Menu>
+                          </>
+                        }
+                      >
+                        <ListItemAvatar>
+                          <Avatar
+                            aria-label="recipe"
+                            src={C?.profilePicture}
+                            sx={{ width: "39px", height: "39px" }}
+                          />
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={`${C?.firstName} ${C?.lastName}`}
+                          secondary={
+                            <>
+                              <Typography
+                                sx={{ display: "inline" }}
+                                component="span"
+                                variant="body2"
+                                color="text.primary"
+                              >
+                                {C.content}
+                              </Typography>
+                            </>
+                          }
+                        />
+                      </ListItem>
                     ))}
                 </TransitionGroup>
               </List>

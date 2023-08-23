@@ -26,15 +26,14 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import "firebase/compat/firestore";
 import { Link, useHistory, NavLink } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
-import Fab from "@mui/material/Fab";
 import SettingsIcon from "@mui/icons-material/Settings";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RssFeedIcon from "@mui/icons-material/RssFeed";
 import LogoutIcon from "@mui/icons-material/Logout";
 import SavedSearchIcon from "@mui/icons-material/SavedSearch";
 import FeedIcon from "@mui/icons-material/Feed";
-import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
-import Divider from "@mui/material/Divider";
+import PlayCircleFilledIcon from '@mui/icons-material/PlayCircleFilled';
+import Divider from '@mui/material/Divider';
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -45,8 +44,6 @@ import CloseFriend from "../closeFriend/CloseFriend";
 import { Star, Notifications } from "@material-ui/icons";
 import { Grid } from "@material-ui/core";
 import Swal from "sweetalert2";
-import AddIcon from "@mui/icons-material/Add";
-import Tooltip from "@mui/material/Tooltip";
 import {
   ThemeProvider,
   createTheme,
@@ -138,7 +135,7 @@ export default function PrimarySearchAppBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [typePets, setTypePets] = React.useState([]);
-  const descriptionElementRef = React.useRef(null);
+  const descriptionElementRef = useRef(null);
   const {
     user,
     message: messageUser,
@@ -164,71 +161,7 @@ export default function PrimarySearchAppBar() {
   const [selectedTypes, setSelectedTypes] = React.useState([]);
   const [allTypePets, setAllTypePets] = React.useState([]);
   const [allsetdata, setAllSetdata] = React.useState([]);
-
-  React.useEffect(() => {
-    const fetchUserPosts = async () => {
-      try {
-        const userSnapshot = await UsersCollection.doc(user.member_id).get();
-        const typeTags = userSnapshot.data().typePets;
-
-        const typePromises = typeTags.map(async (tag) => {
-          const typePetsSnapshot = await typePetsCollection
-            .where("nameType", "==", tag)
-            .get();
-
-          return typePetsSnapshot.docs.map((doc) => doc.data());
-        });
-
-        const typePetsData = await Promise.all(typePromises);
-        const mergedTypePets = typePetsData.flat();
-
-        setTypePets(mergedTypePets);
-
-        //console.log("Merged TypePets:", mergedTypePets);
-
-        // ทำอย่างอื่น ๆ กับ mergedTypePets ตามที่คุณต้องการ
-      } catch (error) {
-        console.error("Error fetching user posts:", error);
-      }
-    };
-
-    const fetchAllTypePets = async () => {
-      try {
-        const typePetsSnapshot = await typePetsCollection.get();
-        const typePetsData = typePetsSnapshot.docs.map((doc) => doc.data());
-
-        //console.log(typePetsData)
-
-        const filteredTypePets = typePetsData.filter(
-          (tag) => tag.status === true
-        );
-        //console.log("Filtered TypePets:", filteredTypePets);
-
-        setAllTypePets(filteredTypePets);
-      } catch (error) {
-        console.error("Error fetching type pets:", error);
-      }
-    };
-
-    fetchUserPosts();
-    fetchAllTypePets();
-  }, []);
-
-  React.useEffect(() => {
-    let tes = typePets;
-    //console.log("typePets", typePets);
-    //console.log("selectedTypes", selectedTypes);
-    let tagPet = [];
-    typePets.forEach((typePet) => {
-      typePets.some((type) => type.nameType === typePet.nameType);
-      tagPet.push(typePet.nameType);
-    });
-
-    let outs = [...tagPet, ...selectedTypes];
-    setAllSetdata(outs);
-    //console.log("OUT", outs);
-  }, [typePets, selectedTypes]);
-
+  
   const handleClickOpen = (scrollType) => () => {
     setHomeopen(true);
     setScroll(scrollType);
@@ -237,7 +170,7 @@ export default function PrimarySearchAppBar() {
   const handleHomeMClose = () => {
     setHomeopen(false);
   };
-
+  
   React.useEffect(() => {
     const fetchUserPets = async () => {
       try {
@@ -263,9 +196,9 @@ export default function PrimarySearchAppBar() {
       } catch (error) {
         console.error("Error fetching user posts:", error);
       }
-    };
+    }
     fetchUserPets();
-  }, []);
+    }, []);
 
   const handleHomeClick = (event) => {
     setMenuAnchorEl(event.currentTarget);
@@ -415,7 +348,7 @@ export default function PrimarySearchAppBar() {
   const handleCloseNoti = () => {
     setAnchorElNoti(null);
   };
-
+  
   const handleFeed = () => {
     history.push("/");
   };
@@ -435,6 +368,7 @@ export default function PrimarySearchAppBar() {
   const handleNews = () => {
     history.push("/sort/news");
   };
+
 
   const handleDeleteNoti = (id) => {
     const NotificationRef = firestore.collection("Notifications").doc(id);
@@ -498,7 +432,7 @@ export default function PrimarySearchAppBar() {
       }
     }
   };
-
+  
   const isButtonPressed = (typePetId) =>
     selectedTypes.includes(typePetId) ||
     typePets.some((type) => type.nameType === typePetId);
@@ -515,7 +449,7 @@ export default function PrimarySearchAppBar() {
 
   const handleSubmit = async () => {
     try {
-      console.log("allsetdata", allsetdata);
+      console.log('allsetdata', allsetdata);
       const usersRef = firestore.collection("Users");
       await usersRef.doc(user.member_id).update({
         typePets: allsetdata,
@@ -551,8 +485,8 @@ export default function PrimarySearchAppBar() {
         elevation: 0,
         style: {
           maxHeight: ITEM_HEIGHT * 4.5,
-          width: "20ch",
-        },
+          width: '20ch',
+        }
       }}
     >
       <MenuItem onClick={handleFeed}>
@@ -591,21 +525,9 @@ export default function PrimarySearchAppBar() {
       </MenuItem>
       <Divider />
       {typePets.map((type, index) => (
-        <CloseFriend key={index} typePet={type} />
-      ))}
-      <MenuItem>
-        <Tooltip title="Add TypePet" placement="right-end">
-          <Fab
-            size="small"
-            primary="Add account"
-            aria-label="add TypePet"
-            onClick={handleClickOpen("paper")}
-          >
-            <AddIcon />
-          </Fab>
-        </Tooltip>
-      </MenuItem>
-      <Dialog
+            <CloseFriend key={index} typePet={type} />
+          ))}
+          <Dialog
         open={homeopen}
         onClose={handleHomeMClose}
         scroll={scroll}
@@ -622,7 +544,7 @@ export default function PrimarySearchAppBar() {
             <Grid container spacing={0.5}>
               {allTypePets.map((typePet, index) =>
                 typePet.status !== false ? (
-                  <Grid item key={index} xs={12} sm={12} md={12} lg={12}>
+                  <Grid item key={index} xs={4} sm={4} md={4} lg={4}>
                     <div
                       className="typePetCard"
                       style={{ backgroundImage: `url(${typePet.imgPet})` }}
