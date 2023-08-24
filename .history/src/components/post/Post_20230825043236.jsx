@@ -67,7 +67,7 @@ const PostText = styled("div")`
   text-overflow: ellipsis;
   overflow: hidden;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   position: relative;
 `;
@@ -657,33 +657,35 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
           ]}
         />
         <CardContent>
-          <div className={`content ${expanded ? "expanded" : ""}`}>
-            {expanded ? (
-              post.content
-            ) : (
-              <PostText>
-                {post.content.split("\n").slice(0, 3).join("\n")}{" "}
-                {post.content.split("\n").length > 3 && ""}
-              </PostText>
-            )}
-          </div>
+        <PostText>
+  {expanded ? (
+    <div className={`content ${expanded ? "expanded" : ""}`}>
+      {post.content}
+    </div>
+  ) : (
+    <div className={`content ${expanded ? "expanded" : ""}`}>
+      {post.content.split("\n").slice(0, 3).join("\n")}{" "}
+      {post.content.split("\n").length > 3 && " ..."}
+    </div>
+  )}
+  {post.content.split("\n").length > 3 && (
+    <Box
+      component="button"
+      onClick={toggleExpand}
+      className={`readMoreButton ${expanded ? "expanded" : ""}`}
+      sx={{
+        background: "none",
+        border: "none",
+        color: "blue",
+        cursor: "pointer",
+        display: expanded ? "none" : "block",
+      }}
+    >
+      อ่านเพิ่มเติม
+    </Box>
+  )}
+</PostText>
 
-          {post.content.split("\n").length > 3 && (
-            <Box
-              component="button"
-              onClick={toggleExpand}
-              className={`readMoreButton ${expanded ? "expanded" : ""}`}
-              sx={{
-                background: "none",
-                border: "none",
-                color: "blue",
-                cursor: "pointer",
-                display: "block",
-              }}
-            >
-              {expanded ? "ย่อเนื้อหา" : "อ่านเพิ่มเติม..."}
-            </Box>
-          )}
 
           <Typography
             variant="body2"

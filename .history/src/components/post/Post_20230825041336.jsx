@@ -20,7 +20,6 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import { TransitionGroup } from "react-transition-group";
 import { styled } from "@mui/system";
-
 import {
   CardContent,
   CardHeader,
@@ -63,7 +62,7 @@ firebase.initializeApp(firebaseConfig);
 const firestore = firebase.firestore();
 const path = process.env.REACT_APP_PATH_ID;
 
-const PostText = styled("div")`
+const PostText = styled.div`
   text-overflow: ellipsis;
   overflow: hidden;
   display: -webkit-box;
@@ -657,34 +656,26 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
           ]}
         />
         <CardContent>
-          <div className={`content ${expanded ? "expanded" : ""}`}>
-            {expanded ? (
-              post.content
-            ) : (
-              <PostText>
-                {post.content.split("\n").slice(0, 3).join("\n")}{" "}
-                {post.content.split("\n").length > 3 && ""}
-              </PostText>
-            )}
-          </div>
-
-          {post.content.split("\n").length > 3 && (
-            <Box
-              component="button"
-              onClick={toggleExpand}
-              className={`readMoreButton ${expanded ? "expanded" : ""}`}
-              sx={{
-                background: "none",
-                border: "none",
-                color: "blue",
-                cursor: "pointer",
-                display: "block",
-              }}
-            >
-              {expanded ? "ย่อเนื้อหา" : "อ่านเพิ่มเติม..."}
-            </Box>
-          )}
-
+        <PostText>
+  <div className={`content ${expanded ? "expanded" : ""}`}>
+    {post.content}
+  </div>
+  {!expanded && (
+    <button
+      onClick={toggleExpand}
+      className={`readMoreButton ${expanded ? "expanded" : ""}`}
+      style={{
+        background: "none",
+        border: "none",
+        color: "blue",
+        cursor: "pointer",
+        display: expanded ? "none" : "block",
+      }}
+    >
+      อ่านเพิ่มเติม
+    </button>
+  )}
+</PostText>
           <Typography
             variant="body2"
             style={{

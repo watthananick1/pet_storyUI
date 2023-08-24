@@ -657,16 +657,18 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
           ]}
         />
         <CardContent>
-          <div className={`content ${expanded ? "expanded" : ""}`}>
-            {expanded ? (
-              post.content
-            ) : (
+          {expanded ? (
+            <div className={`content ${expanded ? "expanded" : ""}`}>
+              {post.content}
+            </div>
+          ) : (
+            <div className={`content ${expanded ? "expanded" : ""}`}>
               <PostText>
                 {post.content.split("\n").slice(0, 3).join("\n")}{" "}
-                {post.content.split("\n").length > 3 && ""}
+                {post.content.split("\n").length > 3 && " ..."}
               </PostText>
-            )}
-          </div>
+            </div>
+          )}
 
           {post.content.split("\n").length > 3 && (
             <Box
@@ -678,10 +680,10 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
                 border: "none",
                 color: "blue",
                 cursor: "pointer",
-                display: "block",
+                display: expanded ? "none" : "block",
               }}
             >
-              {expanded ? "ย่อเนื้อหา" : "อ่านเพิ่มเติม..."}
+              {expanded ? "ย่อ" : "อ่านเพิ่มเติม"}
             </Box>
           )}
 

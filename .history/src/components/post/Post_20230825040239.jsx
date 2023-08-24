@@ -20,7 +20,6 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import { TransitionGroup } from "react-transition-group";
 import { styled } from "@mui/system";
-
 import {
   CardContent,
   CardHeader,
@@ -63,13 +62,21 @@ firebase.initializeApp(firebaseConfig);
 const firestore = firebase.firestore();
 const path = process.env.REACT_APP_PATH_ID;
 
-const PostText = styled("div")`
+const PostText = styled(Box)`
   text-overflow: ellipsis;
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
-  position: relative;
+`;
+
+const ExpandButton = styled.button`
+  display: ${(props) => (props.expanded ? "none" : "block")};
+  margin-top: 0.5rem;
+  background: none;
+  border: none;
+  color: blue; /* Customize the color as needed */
+  cursor: pointer;
 `;
 
 function renderItem({
@@ -177,8 +184,10 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
   const formattedDate = format(createdAt);
   const token = Cookies.get("token");
   const [expanded, setExpanded] = useState(false);
-  const [showButton, setShowButton] = useState(false);
   // const socket = io.connect(process.env.PATH_ID);
+  const toggleExpand = () => {
+    setExpanded(!expanded);
+  };
 
   //++++++++++++++++++ fetch Data +++++++++++++++++++
 
@@ -201,17 +210,6 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
 
     await NotificationRef.set(newNotificationData);
   }
-
-  useEffect(() => {
-    const element = document.querySelector(".content");
-    if (element) {
-      setShowButton(element.scrollHeight > element.clientHeight);
-    }
-  }, [post.content, expanded]);
-
-  const toggleExpand = () => {
-    setExpanded(!expanded);
-  };
 
   useEffect(() => {
     setStatusAdmin(
@@ -657,34 +655,27 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
           ]}
         />
         <CardContent>
-          <div className={`content ${expanded ? "expanded" : ""}`}>
-            {expanded ? (
-              post.content
-            ) : (
-              <PostText>
-                {post.content.split("\n").slice(0, 3).join("\n")}{" "}
-                {post.content.split("\n").length > 3 && ""}
-              </PostText>
-            )}
-          </div>
-
-          {post.content.split("\n").length > 3 && (
-            <Box
+          <PostText>
+            <div className={`content ${expanded ? "expanded" : ""}`}>
+              {post?.content}
+            </div>
+            {!expanded && (
+              <Box
               component="button"
               onClick={toggleExpand}
-              className={`readMoreButton ${expanded ? "expanded" : ""}`}
+              className={`readMoreButton ${expanded ? 'expanded' : ''}`}
               sx={{
-                background: "none",
-                border: "none",
-                color: "blue",
-                cursor: "pointer",
-                display: "block",
+                background: 'none',
+                border: 'none',
+                color: 'blue',
+                cursor: 'pointer',
+                display: expanded ? 'none' : 'block',
               }}
             >
-              {expanded ? "ย่อเนื้อหา" : "อ่านเพิ่มเติม..."}
-            </Box>
-          )}
-
+                อ่านเพิ่มเติม
+                </Box>
+            )}
+          </PostText>
           <Typography
             variant="body2"
             style={{

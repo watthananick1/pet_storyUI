@@ -663,7 +663,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
             ) : (
               <PostText>
                 {post.content.split("\n").slice(0, 3).join("\n")}{" "}
-                {post.content.split("\n").length > 3 && ""}
+                {post.content.split("\n").length > 3 && " ..."}
               </PostText>
             )}
           </div>
@@ -681,7 +681,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
                 display: "block",
               }}
             >
-              {expanded ? "ย่อเนื้อหา" : "อ่านเพิ่มเติม..."}
+              {expanded ? "ย่อเนื้อหา" : "อ่านเพิ่มเติม"}
             </Box>
           )}
 

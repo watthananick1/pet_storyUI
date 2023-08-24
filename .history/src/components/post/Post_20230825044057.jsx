@@ -663,7 +663,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
             ) : (
               <PostText>
                 {post.content.split("\n").slice(0, 3).join("\n")}{" "}
-                {post.content.split("\n").length > 3 && ""}
+                {post.content.split("\n").length > 3 && " .}
               </PostText>
             )}
           </div>

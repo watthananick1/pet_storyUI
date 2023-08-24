@@ -52,9 +52,13 @@ const PostText = styled("div")`
   position: relative;
 `;
 
-function renderItem({ C }) {
+function renderItem({
+  C
+}) {
   return (
-    <ListItem alignItems="flex-start">
+    <ListItem
+      alignItems="flex-start"
+    >
       <ListItemAvatar>
         <Avatar
           aria-label="recipe"
@@ -87,18 +91,25 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
   const [like, setLike] = useState(post.likes.length);
   const [isLiked, setIsLiked] = useState(false);
   const [comments, setComments] = useState([]);
+  // const [showAllComments, setShowAllComments] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  // const [anchorElComment, setAnchorElComment] = useState(false);
+  // const [commentIdToDelete, setCommentIdToDelete] = useState(null);
+  // const [commentIdUser, setCommentIdUser] = useState("");
+  // const [loadingComment, setLoadingComment] = useState(false);
   const maxDisplayedComments = 3;
-  const [expanded, setExpanded] = useState(false);
-  const [showButton, setShowButton] = useState(false);
+
   const createdAt = new Date(post.createdAt.seconds * 1000);
   const formattedDate = format(createdAt);
 
+  
   useEffect(() => {
     // console.log(isPost);
     //console.log(comments);
   }, [comments]);
+
+
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -108,35 +119,31 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
     const fetchComments = async () => {
       if (post.comments) {
         const commentsDataPromises = post.comments.map(async (item) => {
-          const commentsSnapshot = await firestore
-            .collection("Comments")
+          const commentsSnapshot = await firestore.collection('Comments')
             .doc(item)
             .get();
-
-          const userdata = await firestore
-            .collection("Users")
-            .doc(post.member_id)
-            .get();
-
+  
+          const userdata = await firestore.collection('Users').doc(post.member_id).get();
+  
           const commentData = {
             id: commentsSnapshot.id,
             profilePicture: userdata.data().profilePicture,
             firstName: userdata.data().firstName,
             lastName: userdata.data().lastName,
-            ...commentsSnapshot.data(),
+            ...commentsSnapshot.data()
           };
-
+  
           return commentData;
         });
-
+  
         const commentsData = await Promise.all(commentsDataPromises);
         setComments(commentsData);
       }
     };
-
+  
     fetchComments();
   }, [post.comments, post.member_id]); // Include post.member_id in the dependency array
-
+  
   useEffect(() => {
     const element = document.querySelector(".content");
     if (element) {
@@ -147,6 +154,8 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
   const toggleExpand = () => {
     setExpanded(!expanded);
   };
+  
+
 
   //ITEM OF POST ----------------------------------------------
 
@@ -283,17 +292,23 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
       <Paper elevation={3} className="postWrapper">
         <CardHeader
           avatar={
-            <Avatar
-              aria-label="recipe"
-              src={post?.profilePicture}
-              style={{ width: "39px", height: "39px" }}
-            ></Avatar>
+
+              <Avatar
+                aria-label="recipe"
+                src={post?.profilePicture}
+                style={{ width: "39px", height: "39px" }}
+              ></Avatar>
+
           }
           title={<>{`${post?.firstName} ${post?.lastName}`}</>}
-          subheader={<>{formattedDate} </>}
+          subheader={
+            <>
+              {formattedDate}{" "}
+            </>
+          }
         />
         <CardContent>
-          <div className={`content ${expanded ? "expanded" : ""}`}>
+        <div className={`content ${expanded ? "expanded" : ""}`}>
             {expanded ? (
               post.content
             ) : (
@@ -383,19 +398,24 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
                 subheader={<li />}
               >
                 <TransitionGroup>
-                  {comments.slice(0).map((C, index) => (
-                    <Collapse key={index}>
+                  {comments
+                    .slice(
+                      0
+                    )
+                    .map((C, index) => (
+                      <Collapse key={index}>
                       {renderItem({
                         C,
                       })}
-                    </Collapse>
-                  ))}
+                      </Collapse>
+                    ))}
                 </TransitionGroup>
               </List>
             </>
           </CardContent>
         </Collapse>
       </Paper>
+     
     </div>
   );
 }
