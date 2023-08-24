@@ -643,9 +643,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
           subheader={
             <>
               {formattedDate}{" "}
-              <span>
-                {"| "}
-              </span>
+              <span></span>
               <span>
                 {
                   privacyOptions.find((option) => option.value === post.status)

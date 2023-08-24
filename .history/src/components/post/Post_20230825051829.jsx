@@ -7,8 +7,7 @@ import { NestedModal, ReportModal } from "../modelEdit/ModalEdit";
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 import { SortableContainer } from "react-sortable-hoc";
-import HdrAutoIcon from "@mui/icons-material/HdrAuto";
-import { green, pink } from "@mui/material/colors";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import ReactPlayer from "react-player";
 import Cookies from "js-cookie";
 import { MuiFbPhotoGrid } from "mui-fb-photo-grid";
@@ -612,20 +611,13 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
                     overlap="circular"
                     anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                     badgeContent={
-                      <Avatar
-                        alt="Remy Sharp"
-                        sx={{ width: 15, height: 15 }}
-                        style={{ backgroundColor: "white", color: "#3EC70B" }}
-                      >
-                        <HdrAutoIcon sx={{ width: 15, height: 15 }} />
-                      </Avatar>
+                      <AdminPanelSettingsIcon
+                        style={{ color: "#0912DE" }}
+                        sx={{ width: 14, height: 14 }}
+                      />
                     }
                   >
-                    <Avatar
-                      aria-label="recipe"
-                      src={post?.profilePicture}
-                      style={{ width: "39px", height: "39px" }}
-                    ></Avatar>
+                  
                   </Badge>
                 </span>
               ) : (
@@ -639,13 +631,22 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
               )}
             </Link>
           }
-          title={<>{`${post?.firstName} ${post?.lastName}`}</>}
+          title={
+            <>
+              {`${post?.firstName} ${post?.lastName}`}{" "}
+              {statusAdmin ? (
+                <span>
+                  <AdminPanelSettingsIcon
+                    style={{ color: "#0912DE" }}
+                    sx={{ width: 14, height: 14 }}
+                  />{" "}
+                </span>
+              ) : null}{" "}
+            </>
+          }
           subheader={
             <>
               {formattedDate}{" "}
-              <span>
-                {"| "}
-              </span>
               <span>
                 {
                   privacyOptions.find((option) => option.value === post.status)

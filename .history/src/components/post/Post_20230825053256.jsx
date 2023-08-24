@@ -614,10 +614,10 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
                     badgeContent={
                       <Avatar
                         alt="Remy Sharp"
-                        sx={{ width: 15, height: 15 }}
+                        sx={{ width: 10, height }}
                         style={{ backgroundColor: "white", color: "#3EC70B" }}
                       >
-                        <HdrAutoIcon sx={{ width: 15, height: 15 }} />
+                        <HdrAutoIcon />
                       </Avatar>
                     }
                   >
@@ -643,9 +643,6 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
           subheader={
             <>
               {formattedDate}{" "}
-              <span>
-                {"| "}
-              </span>
               <span>
                 {
                   privacyOptions.find((option) => option.value === post.status)

@@ -299,12 +299,11 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
           subheader={
             <>
               {formattedDate}{" "}
-              <span>
-                {
-                  privacyOptions.find((option) => option.value === post.status)
-                    ?.label
-                }
-              </span>{" "}
+              const privacyOptions = [
+    { label: "สาธารณะ", value: "normal" },
+    { label: "ส่วนตัว", value: "private" },
+    { label: "เฉพาะผู้ติดตาม", value: "followers" },
+  ];
             </>
           }
         />

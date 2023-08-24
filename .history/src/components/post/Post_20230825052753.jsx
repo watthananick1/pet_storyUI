@@ -7,8 +7,9 @@ import { NestedModal, ReportModal } from "../modelEdit/ModalEdit";
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 import { SortableContainer } from "react-sortable-hoc";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import HdrAutoIcon from "@mui/icons-material/HdrAuto";
-import { green, pink } from "@mui/material/colors";
+import { green, pink } from '@mui/material/colors';
 import ReactPlayer from "react-player";
 import Cookies from "js-cookie";
 import { MuiFbPhotoGrid } from "mui-fb-photo-grid";
@@ -612,12 +613,10 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
                     overlap="circular"
                     anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                     badgeContent={
-                      <Avatar
-                        alt="Remy Sharp"
-                        sx={{ width: 15, height: 15 }}
-                        style={{ backgroundColor: "white", color: "#3EC70B" }}
-                      >
-                        <HdrAutoIcon sx={{ width: 15, height: 15 }} />
+                      <Avatar sx={{ bgcolor: green[500] }}>
+                        <HdrAutoIcon
+                          style={{ backgroundColor: "white", color: "#3EC70B" }}
+                        />
                       </Avatar>
                     }
                   >
@@ -643,9 +642,6 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
           subheader={
             <>
               {formattedDate}{" "}
-              <span>
-                {"| "}
-              </span>
               <span>
                 {
                   privacyOptions.find((option) => option.value === post.status)

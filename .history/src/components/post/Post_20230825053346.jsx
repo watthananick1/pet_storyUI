@@ -617,7 +617,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
                         sx={{ width: 15, height: 15 }}
                         style={{ backgroundColor: "white", color: "#3EC70B" }}
                       >
-                        <HdrAutoIcon sx={{ width: 15, height: 15 }} />
+                        <HdrAutoIco n />
                       </Avatar>
                     }
                   >
@@ -643,9 +643,6 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
           subheader={
             <>
               {formattedDate}{" "}
-              <span>
-                {"| "}
-              </span>
               <span>
                 {
                   privacyOptions.find((option) => option.value === post.status)

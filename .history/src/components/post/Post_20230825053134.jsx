@@ -612,13 +612,17 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
                     overlap="circular"
                     anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                     badgeContent={
-                      <Avatar
+                      <SmallAvatar
                         alt="Remy Sharp"
-                        sx={{ width: 15, height: 15 }}
-                        style={{ backgroundColor: "white", color: "#3EC70B" }}
-                      >
-                        <HdrAutoIcon sx={{ width: 15, height: 15 }} />
-                      </Avatar>
+                        icon={
+                          <HdrAutoIcon
+                            style={{
+                              backgroundColor: "white",
+                              color: "#3EC70B",
+                            }}
+                          />
+                        }
+                      />
                     }
                   >
                     <Avatar
@@ -643,9 +647,6 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
           subheader={
             <>
               {formattedDate}{" "}
-              <span>
-                {"| "}
-              </span>
               <span>
                 {
                   privacyOptions.find((option) => option.value === post.status)

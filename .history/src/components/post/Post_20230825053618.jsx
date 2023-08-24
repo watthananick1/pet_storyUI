@@ -644,7 +644,6 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
             <>
               {formattedDate}{" "}
               <span>
-                {"| "}
               </span>
               <span>
                 {

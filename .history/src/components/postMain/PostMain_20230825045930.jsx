@@ -99,7 +99,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
     // console.log(isPost);
     //console.log(comments);
   }, [comments]);
-
+  
   const privacyOptions = [
     { label: "สาธารณะ", value: "normal" },
     { label: "ส่วนตัว", value: "private" },
@@ -296,17 +296,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
             ></Avatar>
           }
           title={<>{`${post?.firstName} ${post?.lastName}`}</>}
-          subheader={
-            <>
-              {formattedDate}{" "}
-              <span>
-                {
-                  privacyOptions.find((option) => option.value === post.status)
-                    ?.label
-                }
-              </span>{" "}
-            </>
-          }
+          subheader={<>{formattedDate} <spa </>}
         />
         <CardContent>
           <div className={`content ${expanded ? "expanded" : ""}`}>
