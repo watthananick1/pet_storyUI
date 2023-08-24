@@ -212,6 +212,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
       ...FIVE.map((group) => {
         const updatedGroup = [...group];
         if (items.length >= 6 && items[5]) {
+          console.log("groupSIX", items.length);
           updatedGroup.push(setImage(items[5]));
         }
         return updatedGroup;
@@ -233,6 +234,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
     ];
 
     const GROUP_NUM_IMAGE = Array.from({ length: items.length }, (_, i) => {
+      console.log("num", items.length, items);
       switch (items.length) {
         case 1:
           return ONE;

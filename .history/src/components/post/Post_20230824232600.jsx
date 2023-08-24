@@ -14,13 +14,20 @@ import Paper from "@mui/material/Paper";
 import "mui-fb-photo-grid/dist/index.css";
 import { Messageupdate } from "../../context/AuthActions";
 import Divider from "@mui/material/Divider";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
 import { TransitionGroup } from "react-transition-group";
 
 import {
+  Card,
   CardContent,
   CardHeader,
   CardActions,

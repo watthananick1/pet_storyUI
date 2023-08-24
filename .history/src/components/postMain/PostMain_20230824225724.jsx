@@ -170,6 +170,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
     // console.log(items)
 
     const setImage = (image) => ({
+      title: image.title,
       img: image.url,
       imgThumbnail: image.url,
     });
@@ -190,17 +191,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
     }
 
     const FOUR = [
-      ...THREE.map((group) => {
-        const updatedGroup = [...group];
-        if (items.length >= 4 && items[3]) {
-          updatedGroup.push(setImage(items[3]));
-        }
-        return updatedGroup;
-      }),
-    ];
-
-    const FIVE = [
-      ...FOUR.map((group) => {
+      THREE.map((group) => {
         const updatedGroup = [...group];
         if (items.length >= 5 && items[4]) {
           updatedGroup.push(setImage(items[4]));
@@ -208,8 +199,9 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
         return updatedGroup;
       }),
     ];
-    const SIX = [
-      ...FIVE.map((group) => {
+
+    const FIVE = [
+      FOUR.map((group) => {
         const updatedGroup = [...group];
         if (items.length >= 6 && items[5]) {
           updatedGroup.push(setImage(items[5]));
@@ -219,7 +211,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
     ];
 
     const MORE = [
-      ...THREE.map((group) => {
+      THREE.map((group) => {
         const updatedGroup = [...group];
         if (items.length >= 7 && items[4] && items[5] && items[6]) {
           updatedGroup.push(
@@ -233,7 +225,9 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
     ];
 
     const GROUP_NUM_IMAGE = Array.from({ length: items.length }, (_, i) => {
-      switch (items.length) {
+      console.log("num", i+1);
+      console.log("item", items);
+      switch (i + 1) {
         case 1:
           return ONE;
         case 2:
@@ -244,8 +238,6 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
           return FOUR;
         case 5:
           return FIVE;
-        case 6:
-          return SIX;
         default:
           return MORE;
       }

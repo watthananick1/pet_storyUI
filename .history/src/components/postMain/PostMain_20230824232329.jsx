@@ -175,12 +175,12 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
     });
 
     const ONE = [];
-    if (items.length >= 1 && items[0]) {
+    if (items.length >= 0 && items[0]) {
       ONE.push([setImage(items[0])]);
     }
 
     const TWO = [];
-    if (items.length >= 2 && items[0] && items[1]) {
+    if (items.length >= 1 && items[0] && items[1]) {
       TWO.push([setImage(items[0]), setImage(items[1])]);
     }
 
@@ -192,7 +192,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
     const FOUR = [
       ...THREE.map((group) => {
         const updatedGroup = [...group];
-        if (items.length >= 4 && items[3]) {
+        if (items.length >= 5 && items[3]) {
           updatedGroup.push(setImage(items[3]));
         }
         return updatedGroup;
@@ -202,7 +202,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
     const FIVE = [
       ...FOUR.map((group) => {
         const updatedGroup = [...group];
-        if (items.length >= 5 && items[4]) {
+        if (items.length >= 6 && items[4]) {
           updatedGroup.push(setImage(items[4]));
         }
         return updatedGroup;
@@ -212,6 +212,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
       ...FIVE.map((group) => {
         const updatedGroup = [...group];
         if (items.length >= 6 && items[5]) {
+          console.log("groupSIX", items.length);
           updatedGroup.push(setImage(items[5]));
         }
         return updatedGroup;
@@ -233,6 +234,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
     ];
 
     const GROUP_NUM_IMAGE = Array.from({ length: items.length }, (_, i) => {
+      console.log("num", items.length, items);
       switch (items.length) {
         case 1:
           return ONE;
@@ -245,6 +247,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
         case 5:
           return FIVE;
         case 6:
+          console.log("SIX", SIX);
           return SIX;
         default:
           return MORE;

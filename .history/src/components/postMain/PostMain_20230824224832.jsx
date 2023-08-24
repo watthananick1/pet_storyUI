@@ -170,6 +170,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
     // console.log(items)
 
     const setImage = (image) => ({
+      title: image.title,
       img: image.url,
       imgThumbnail: image.url,
     });
@@ -192,8 +193,8 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
     const FOUR = [
       ...THREE.map((group) => {
         const updatedGroup = [...group];
-        if (items.length >= 4 && items[3]) {
-          updatedGroup.push(setImage(items[3]));
+        if (items.length >= 5 && items[4]) {
+          updatedGroup.push(setImage(items[4]));
         }
         return updatedGroup;
       }),
@@ -201,15 +202,6 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
 
     const FIVE = [
       ...FOUR.map((group) => {
-        const updatedGroup = [...group];
-        if (items.length >= 5 && items[4]) {
-          updatedGroup.push(setImage(items[4]));
-        }
-        return updatedGroup;
-      }),
-    ];
-    const SIX = [
-      ...FIVE.map((group) => {
         const updatedGroup = [...group];
         if (items.length >= 6 && items[5]) {
           updatedGroup.push(setImage(items[5]));
@@ -233,7 +225,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
     ];
 
     const GROUP_NUM_IMAGE = Array.from({ length: items.length }, (_, i) => {
-      switch (items.length) {
+      switch (i + 1) {
         case 1:
           return ONE;
         case 2:
@@ -244,8 +236,6 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
           return FOUR;
         case 5:
           return FIVE;
-        case 6:
-          return SIX;
         default:
           return MORE;
       }
@@ -261,7 +251,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
 
           if (isImage) {
             const imageCount = Math.min(items.length, GROUP_NUM_IMAGE.length);
-            //console.log("item", items.length);
+            
             const images = GROUP_NUM_IMAGE[imageCount - 1];
 
             return (

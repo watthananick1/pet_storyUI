@@ -14,13 +14,20 @@ import Paper from "@mui/material/Paper";
 import "mui-fb-photo-grid/dist/index.css";
 import { Messageupdate } from "../../context/AuthActions";
 import Divider from "@mui/material/Divider";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
 import { TransitionGroup } from "react-transition-group";
 
 import {
+  Card,
   CardContent,
   CardHeader,
   CardActions,
@@ -377,7 +384,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
   //ITEM OF POST ----------------------------------------------
 
   const SortableList = SortableContainer(({ items }) => {
-    
+    // console.log(items)
 
     const setImage = (image) => ({
       title: image.title,
@@ -403,8 +410,8 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
     const FOUR = [
       ...THREE.map((group) => {
         const updatedGroup = [...group];
-        if (items.length >= 4 && items[3]) {
-          updatedGroup.push(setImage(items[3]));
+        if (items.length >= 5 && items[4]) {
+          updatedGroup.push(setImage(items[4]));
         }
         return updatedGroup;
       }),
@@ -412,15 +419,6 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
 
     const FIVE = [
       ...FOUR.map((group) => {
-        const updatedGroup = [...group];
-        if (items.length >= 5 && items[4]) {
-          updatedGroup.push(setImage(items[4]));
-        }
-        return updatedGroup;
-      }),
-    ];
-    const SIX = [
-      ...FIVE.map((group) => {
         const updatedGroup = [...group];
         if (items.length >= 6 && items[5]) {
           updatedGroup.push(setImage(items[5]));
@@ -444,7 +442,8 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
     ];
 
     const GROUP_NUM_IMAGE = Array.from({ length: items.length }, (_, i) => {
-      switch (items.length) {
+      console.log(object)
+      switch (i + 1) {
         case 1:
           return ONE;
         case 2:
@@ -455,8 +454,6 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
           return FOUR;
         case 5:
           return FIVE;
-        case 6:
-          return SIX;
         default:
           return MORE;
       }
@@ -469,7 +466,6 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
 
           // console.log(isImage)
           // console.log(item.type)
-          //console.log("item", items.length());
 
           if (isImage) {
             const imageCount = Math.min(items.length, GROUP_NUM_IMAGE.length);

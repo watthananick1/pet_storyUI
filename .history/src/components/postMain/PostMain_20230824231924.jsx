@@ -192,8 +192,8 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
     const FOUR = [
       ...THREE.map((group) => {
         const updatedGroup = [...group];
-        if (items.length >= 4 && items[3]) {
-          updatedGroup.push(setImage(items[3]));
+        if (items.length >= 5 && items[4]) {
+          updatedGroup.push(setImage(items[4]));
         }
         return updatedGroup;
       }),
@@ -202,8 +202,8 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
     const FIVE = [
       ...FOUR.map((group) => {
         const updatedGroup = [...group];
-        if (items.length >= 5 && items[4]) {
-          updatedGroup.push(setImage(items[4]));
+        if (items.length >= 6 && items[5]) {
+          updatedGroup.push(setImage(items[5]));
         }
         return updatedGroup;
       }),
@@ -212,7 +212,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
       ...FIVE.map((group) => {
         const updatedGroup = [...group];
         if (items.length >= 6 && items[5]) {
-          updatedGroup.push(setImage(items[5]));
+          updatedGroup.push(setImage(items[5]);
         }
         return updatedGroup;
       }),
@@ -233,6 +233,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
     ];
 
     const GROUP_NUM_IMAGE = Array.from({ length: items.length }, (_, i) => {
+      console.log("num", items.length, items);
       switch (items.length) {
         case 1:
           return ONE;
@@ -245,6 +246,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
         case 5:
           return FIVE;
         case 6:
+          console.log("SIX", SIX);
           return SIX;
         default:
           return MORE;
