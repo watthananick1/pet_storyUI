@@ -1,0 +1,47 @@
+import "./closeFriend.css";
+import { useHistory } from "react-router";
+import FolderIcon from '@mui/icons-material/Folder';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Avatar } from "@mui/material";
+import IconButton from '@mui/material/IconButton';
+export default function CloseFriend({ typePet }) {
+  // const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+  const history = useHistory();
+
+  const handleType = (tagpet) => {
+    history.push(`/sort/type/${tagpet}`);
+  };
+  return (
+    <>
+                   <ListItem
+             secondaryAction={
+               <IconButton edge="end" aria-label="delete">
+                 <DeleteIcon />
+               </IconButton>
+             }
+           >
+             <ListItemAvatar>
+               <Avatar>
+                 <FolderIcon />
+               </Avatar>
+             </ListItemAvatar>
+             <ListItemText
+               primary="Single-line item"
+               secondary={secondary ? 'Secondary text' : null}
+             />
+           </ListItem>
+      <li
+        className="sidebarFriend"
+        onClick={() => handleType(typePet?.nameType)}
+      >
+        <Avatar
+          className="sidebarFriendImg"
+          aria-label="recipe"
+          src={typePet?.imgPet}
+          style={{ width: "39px", height: "39px" }}
+        ></Avatar>
+        <span className="sidebarFriendName">{typePet?.nameType}</span>
+      </li>
+    </>
+  );
+}
