@@ -1,12 +1,5 @@
-import React, { useState, useContext, useEffect } from "react";
-import {
-  Box,
-  Modal,
-  IconButton,
-  TextField,
-  Grid,
-  Autocomplete,
-} from "@mui/material";
+import React, { useState, useContext } from "react";
+import { Box, Modal, IconButton, TextField, Grid, Autocomplete } from "@mui/material";
 // import {
 //   Avatar,
 //   Chip,
@@ -65,27 +58,21 @@ const NestedModal = ({
   onTitle,
   userId,
   onContentData,
-  onStatus,
   onPostUpdate,
   isAddComment,
   isMember_id,
 }) => {
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState(onContent);
   const [loading, setLoading] = useState(false);
   const token = Cookies.get("token");
   const { user: datauser, dispatch } = useContext(AuthContext);
-  const [privacy, setPrivacy] = useState(onStatus);
-
+  const [privacy, setPrivacy] = useState("normal");
+  
   const privacyOptions = [
     { label: "สาธารณะ", value: "normal" },
     { label: "ส่วนตัว", value: "private" },
     { label: "เฉพาะผู้ติดตาม", value: "followers" },
   ];
-  
-  useEffect(() => {
-    // console.log("object", onContent)
-    setContent(onContent.content);
-  }, [onContent]);
 
   async function newNotification(onType, onBody, onTitle) {
     const NotificationRef = firestore.collection("Notifications").doc();
@@ -106,95 +93,94 @@ const NestedModal = ({
 
     await NotificationRef.set(newNotificationData);
   }
-
+  
   const handlePrivacyChange = (event, value) => {
     if (value) {
       setPrivacy(value.value);
-      console.log("object", value.value);
     } else {
-      setPrivacy(onStatus);
+      setPrivacy("normal");
     }
   };
 
   const handleSaveChanges = async () => {
-    try {
-      setLoading(true);
+    if (onContent !== content) {
+      try {
+        setLoading(true);
 
-      let endpoint = "";
-      let updatedData = null;
+        let endpoint = "";
+        let updatedData = null;
 
-      if (onTitle === "Post") {
-        endpoint = `${path}/api/posts/${onContentID}`;
-        console.log("onTitle", onTitle);
-        updatedData = {
-          content: content,
-          member_id: userId,
-          status: privacy,
-        };
-        
-        //console.log(updatedData)
-        await axios.put(endpoint, updatedData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        const updatedPost = { ...onContent, ...updatedData };
-        onPostUpdate(updatedPost);
-        dispatch(Messageupdate("Success Share Post.", true, "success"));
-      } else if (onTitle === "Comment") {
-        endpoint = `${path}/api/comments/${onContentID}/Comments/${onCommentsID}`;
-        updatedData = { content: content, member_id: userId };
-        await axios.put(endpoint, updatedData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-      } else if (onTitle === "Add Comment") {
-        try {
-          endpoint = `${path}/api/comments/Comment/${onContentID}`;
-          const updatedData = { content: content, member_id: userId };
-
-          await axios.post(endpoint, updatedData, {
+        if (onTitle === "Post") {
+          endpoint = `${path}/api/posts/${onContentID}`;
+          updatedData = {
+            content: content,
+            member_id: userId,
+            status: "normal",
+          };
+          await axios.put(endpoint, updatedData, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           });
-
-          dispatch(Messageupdate("Success comment post.", true, "success"));
-        } catch (error) {
-          dispatch(
-            Messageupdate("Failed to comment on the post.", true, "error")
-          );
-          console.error("Error adding comment:", error);
-        } finally {
-          onClose();
-        }
-      } else {
-        console.log("Invalid Edit Type");
-        return;
-      }
-
-      if (isAddComment) {
-        const resComments = await axios.get(
-          `${path}/api/comments/${onContentID}/Comments`,
-          {
+          const updatedPost = { ...onContent, ...updatedData };
+          onPostUpdate(updatedPost);
+          dispatch(Messageupdate("Success Share Post.", true, "success"));
+        } else if (onTitle === "Comment") {
+          endpoint = `${path}/api/comments/${onContentID}/Comments/${onCommentsID}`;
+          updatedData = { content: content, member_id: userId };
+          await axios.put(endpoint, updatedData, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
+          });
+        } else if (onTitle === "Add Comment") {
+          try {
+          
+            endpoint = `${path}/api/comments/Comment/${onContentID}`;
+            const updatedData = { content: content, member_id: userId };
+            
+            await axios.post(endpoint, updatedData, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
+      
+            dispatch(Messageupdate("Success comment post.", true, "success"));
+          } catch (error) {
+            dispatch(Messageupdate("Failed to comment on the post.", true, "error"));
+            console.error("Error adding comment:", error);
+          } finally {
+            onClose();
           }
-        );
-        onPostUpdate(resComments.data, onTitle);
-      } else {
-        const updatedItem = { ...onContent, content };
-        onPostUpdate(updatedItem, onTitle);
+        } else {
+          console.log("Invalid Edit Type");
+          return;
+        }
+
+        if (isAddComment) {
+          const resComments = await axios.get(
+            `${path}/api/comments/${onContentID}/Comments`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          onPostUpdate(resComments.data, onTitle);
+        } else {
+          const updatedItem = { ...onContent, content };
+          onPostUpdate(updatedItem, onTitle);
+        }
+      } catch (err) {
+        dispatch(Messageupdate("Failed Add Content Post.", true, "error"));
+        console.log(err);
+      } finally {
+        setLoading(false);
+        dispatch(Messageupdate("Success Add Content Post.", true, "success"));
       }
-    } catch (err) {
-      dispatch(Messageupdate("Failed Add Content Post.", true, "error"));
-      console.log(err);
-    } finally {
-      setLoading(false);
-      dispatch(Messageupdate("Success Add Content Post.", true, "success"));
+    } else {
+      dispatch(Messageupdate("Failed Edit Content.", true, "error"));
+      console.log("Err Edit Content");
     }
     onClose();
   };
@@ -226,32 +212,31 @@ const NestedModal = ({
             <h2 id="nested-modal-title">{onTitle}</h2>
           </Grid>
           <Grid item xs={12} sm={12} md={12}>
-            <h5 id="nested-modal-title">Status</h5>
-            <Autocomplete
-              id="margin-none"
-              autoFocus
-              disableCloseOnSelect
-              fullWidth
-              selectOnFocus
-              autoHighlight
-              options={privacyOptions}
-              isOptionEqualToValue={(option, value) =>
-                option.value === value.value
-              }
-              defaultValue={privacyOptions.find(
-                (option) => option.value === onStatus
-              )}
-              getOptionLabel={(option) => option.label}
-              onChange={handlePrivacyChange}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  variant="standard"
-                  size="small"
-                  sx={{ color: "#6309DE", m: 1 }}
-                />
-              )}
-            />
+          <Autocomplete
+                id="margin-none"
+                autoFocus
+                disableCloseOnSelect
+                fullWidth
+                selectOnFocus
+                autoHighlight
+                options={privacyOptions}
+                isOptionEqualToValue={(option, value) =>
+                  option.value === value.value
+                }
+                defaultValue={privacyOptions.find(
+                  (option) => option.value === "normal"
+                )}
+                getOptionLabel={(option) => option.label}
+                onChange={handlePrivacyChange}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    variant="standard"
+                    size="small"
+                    sx={{ color: "#6309DE", m: 1 }}
+                  />
+                )}
+              />
           </Grid>
           <Grid item xs={12} sm={12} md={12}>
             <TextField
@@ -259,7 +244,7 @@ const NestedModal = ({
               label={`${onTitle} Content`}
               multiline
               rows={4}
-              value={content}
+              value={content?.content}
               onChange={handleChangeContent}
               fullWidth
             />
@@ -320,7 +305,7 @@ const ReportModal = ({
 
           const postRef = firestore.collection("Posts").doc(postId);
           const postSnapshot = await postRef.get();
-
+          
           if (!postSnapshot.exists) {
             dispatch(Messageupdate(`Failed report ${onTitle}.`, true, "error"));
             return;
@@ -335,8 +320,9 @@ const ReportModal = ({
               createdAt: new Date(),
               updatedAt: new Date(),
             };
-
+            
             await reportRef.set(reportData);
+
           }
         } else if (onTitle === "User") {
           const reporterId = userId;

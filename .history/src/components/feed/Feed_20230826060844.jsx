@@ -199,6 +199,7 @@ export default function Feed({ firstName, onProfile, sort }) {
       }
     }
   };
+  
 
   useEffect(() => {
     const source = axios.CancelToken.source();

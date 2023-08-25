@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import {
   Box,
   Modal,
@@ -70,7 +70,7 @@ const NestedModal = ({
   isAddComment,
   isMember_id,
 }) => {
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState(onContent);
   const [loading, setLoading] = useState(false);
   const token = Cookies.get("token");
   const { user: datauser, dispatch } = useContext(AuthContext);
@@ -81,11 +81,6 @@ const NestedModal = ({
     { label: "ส่วนตัว", value: "private" },
     { label: "เฉพาะผู้ติดตาม", value: "followers" },
   ];
-  
-  useEffect(() => {
-    // console.log("object", onContent)
-    setContent(onContent.content);
-  }, [onContent]);
 
   async function newNotification(onType, onBody, onTitle) {
     const NotificationRef = firestore.collection("Notifications").doc();
@@ -125,14 +120,14 @@ const NestedModal = ({
 
       if (onTitle === "Post") {
         endpoint = `${path}/api/posts/${onContentID}`;
-        console.log("onTitle", onTitle);
         updatedData = {
           content: content,
           member_id: userId,
           status: privacy,
         };
-        
-        //console.log(updatedData)
+
+        console.log(updatedData);
+
         await axios.put(endpoint, updatedData, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -259,7 +254,7 @@ const NestedModal = ({
               label={`${onTitle} Content`}
               multiline
               rows={4}
-              value={content}
+              value={content?.content}
               onChange={handleChangeContent}
               fullWidth
             />

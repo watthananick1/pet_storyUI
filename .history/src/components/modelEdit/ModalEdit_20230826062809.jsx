@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import {
   Box,
   Modal,
@@ -83,8 +83,7 @@ const NestedModal = ({
   ];
   
   useEffect(() => {
-    // console.log("object", onContent)
-    setContent(onContent.content);
+    setContent(onContent);
   }, [onContent]);
 
   async function newNotification(onType, onBody, onTitle) {
@@ -124,7 +123,7 @@ const NestedModal = ({
       let updatedData = null;
 
       if (onTitle === "Post") {
-        endpoint = `${path}/api/posts/${onContentID}`;
+        // endpoint = `${path}/api/posts/${onContentID}`;
         console.log("onTitle", onTitle);
         updatedData = {
           content: content,
@@ -132,15 +131,15 @@ const NestedModal = ({
           status: privacy,
         };
         
-        //console.log(updatedData)
-        await axios.put(endpoint, updatedData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        console.log(content?.content)
+        // await axios.put(endpoint, updatedData, {
+        //   headers: {
+        //     Authorization: `Bearer ${token}`,
+        //   },
+        // });
 
-        const updatedPost = { ...onContent, ...updatedData };
-        onPostUpdate(updatedPost);
+        // const updatedPost = { ...onContent, ...updatedData };
+        // onPostUpdate(updatedPost);
         dispatch(Messageupdate("Success Share Post.", true, "success"));
       } else if (onTitle === "Comment") {
         endpoint = `${path}/api/comments/${onContentID}/Comments/${onCommentsID}`;
@@ -259,7 +258,7 @@ const NestedModal = ({
               label={`${onTitle} Content`}
               multiline
               rows={4}
-              value={content}
+              value={content?.content}
               onChange={handleChangeContent}
               fullWidth
             />

@@ -199,6 +199,11 @@ export default function Feed({ firstName, onProfile, sort }) {
       }
     }
   };
+  
+  // const Post = ({ post }) => {
+  //   console.log(post); // Add this line to inspect the post object
+  //   // Rest of your code
+  // };
 
   useEffect(() => {
     const source = axios.CancelToken.source();

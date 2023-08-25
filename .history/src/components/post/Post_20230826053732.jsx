@@ -299,7 +299,6 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
     setLoadingComment(true);
     if (type === "Post") {
       setPost({ ...updatedPost, ...post });
-      window.location.reload();
     } else if (type === "Comment") {
       const updatedCommentIndex = comments.findIndex(
         (comment) => comment.id === updatedPost.id
@@ -847,7 +846,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
           onCommentsID={dataEditID}
           onContentData={() => setComments(comments)}
           onLoading={true}
-          onStatus={post.status}
+          onStatus={}
           isMember_id={post.member_id}
           isAddComment={isAddComment}
           onPostUpdate={handlePostUpdate}

@@ -299,7 +299,6 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
     setLoadingComment(true);
     if (type === "Post") {
       setPost({ ...updatedPost, ...post });
-      window.location.reload();
     } else if (type === "Comment") {
       const updatedCommentIndex = comments.findIndex(
         (comment) => comment.id === updatedPost.id

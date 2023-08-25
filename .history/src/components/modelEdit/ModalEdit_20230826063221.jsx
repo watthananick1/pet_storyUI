@@ -83,7 +83,7 @@ const NestedModal = ({
   ];
   
   useEffect(() => {
-    // console.log("object", onContent)
+    console.log("object", onContent)
     setContent(onContent.content);
   }, [onContent]);
 

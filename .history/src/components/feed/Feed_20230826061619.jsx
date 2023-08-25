@@ -244,7 +244,15 @@ export default function Feed({ firstName, onProfile, sort }) {
             },
           }
         );
-
+        // const sortedPosts = res.data.sort((a, b) => {
+        //   const timeDiffA = Math.abs(
+        //     currentTime - new Date(a.createdAt.seconds * 1000).getTime()
+        //   );
+        //   const timeDiffB = Math.abs(
+        //     currentTime - new Date(b.createdAt.seconds * 1000).getTime()
+        //   );
+        //   return timeDiffA - timeDiffB;
+        // });
         setPosts(res.data);
       } catch (error) {
         dispatch(Messageupdate("Failed Request Post", true, "error"));

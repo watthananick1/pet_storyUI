@@ -83,7 +83,7 @@ const NestedModal = ({
   ];
   
   useEffect(() => {
-    // console.log("object", onContent)
+    console.log("object", onContent)
     setContent(onContent.content);
   }, [onContent]);
 
@@ -132,7 +132,7 @@ const NestedModal = ({
           status: privacy,
         };
         
-        //console.log(updatedData)
+        console.log(updatedData)
         await axios.put(endpoint, updatedData, {
           headers: {
             Authorization: `Bearer ${token}`,

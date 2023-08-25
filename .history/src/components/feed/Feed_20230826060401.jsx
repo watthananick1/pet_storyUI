@@ -157,9 +157,9 @@ export default function Feed({ firstName, onProfile, sort }) {
   //   console.log(showNewPosts);
   // }, [showNewPosts]);
 
-  // useEffect(() => {
-  //   console.log(posts);
-  // }, [posts]);
+  useEffect(() => {
+    console.log(posts);
+  }, [posts]);
 
   // useEffect(() => {
   //   console.log(message);
@@ -199,6 +199,11 @@ export default function Feed({ firstName, onProfile, sort }) {
       }
     }
   };
+  
+  // const Post = ({ post }) => {
+  //   console.log(post); // Add this line to inspect the post object
+  //   // Rest of your code
+  // };
 
   useEffect(() => {
     const source = axios.CancelToken.source();
@@ -244,7 +249,7 @@ export default function Feed({ firstName, onProfile, sort }) {
             },
           }
         );
-
+        
         setPosts(res.data);
       } catch (error) {
         dispatch(Messageupdate("Failed Request Post", true, "error"));
