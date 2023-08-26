@@ -146,7 +146,7 @@ export default function FromMembers({ selectedMember }) {
     try {
       setLoading(true);
       //console.log(new Date().setHours(new Date().getHours() + 72));
-      await usersCollection.doc(selectedMember.id).update({
+      await usersCollection.doc(selectedMember.reported_id).update({
         status: status,
         expirationDate: new Date().setHours(new Date().getHours() + 72),
         blockReason: blockReason,
@@ -160,14 +160,23 @@ export default function FromMembers({ selectedMember }) {
     }
   };
 
-  useEffect(() => {
+  useEffect(async () => {
     if (selectedMember) {
-      //console.log(selectedMember);
-      setFirstName(selectedMember.firstName);
-      setLastName(selectedMember.lastName);
-      setEmail(selectedMember.email);
-      setStatus(selectedMember.status);
-      switch (selectedMember.statusUser) {
+      // Fetch user data based on the reported_id
+      const userDoc = await usersCollection
+        .doc(selectedMember.reported_id)
+        .get();
+      const userData = userDoc.data();
+      //console.log("object", userData);
+
+      // Set state variables using the fetched data
+      setFirstName(userData.firstName);
+      setLastName(userData.lastName);
+      setEmail(userData.email);
+      setStatus(userData.status);
+
+      // Set the selected status value based on the statusUser from selectedMember
+      switch (userData.statusUser) {
         case "ADMIN":
           setValue({ label: "Admin", value: "ADMIN" });
           break;
@@ -181,7 +190,9 @@ export default function FromMembers({ selectedMember }) {
           setValue({ label: "User", value: "USER" });
           break;
       }
-      setImagePreview(selectedMember.profilePicture);
+
+      // Set image preview, expiration date, or any other relevant state variables
+      setImagePreview(userData.profilePicture);
       setExpirationDate(selectedMember.setExpirationDate);
     }
   }, [selectedMember]);
@@ -272,7 +283,7 @@ export default function FromMembers({ selectedMember }) {
       {selectedMember ? (
         <Paper elevation={1} sx={{ p: 2 }}>
           <Dialog open={openBlockDialog} onClose={handleCloseBlockDialog}>
-            <DialogTitle>บล็อกผู้ใช้</DialogTitle>
+            <DialogTitle>ฺบล็อกผู้ใช้</DialogTitle>
             <DialogContent>
               <DialogContentText>
                 กรุณาใส่รายละเอียดของการบล็อก
@@ -295,7 +306,7 @@ export default function FromMembers({ selectedMember }) {
           </Dialog>
           <FormGroup>
             <Typography color="primary" sx={{ p: 2 }} variant="h5">
-              Update Member
+              Member
             </Typography>
             <Grid item xs={12} md={12}>
               <div

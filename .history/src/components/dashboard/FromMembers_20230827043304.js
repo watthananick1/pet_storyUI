@@ -137,11 +137,11 @@ export default function FromMembers({ selectedMember }) {
     width: 100,
     height: 100,
   });
-
+  
   const handleBlock = () => {
     setOpenBlockDialog(true);
   };
-
+  
   const handleUpdateReportUser = async () => {
     try {
       setLoading(true);
@@ -182,16 +182,18 @@ export default function FromMembers({ selectedMember }) {
           break;
       }
       setImagePreview(selectedMember.profilePicture);
-      setExpirationDate(selectedMember.setExpirationDate);
+      setExpirationDate(selectedMember.setExpirationDate)
+    
     }
   }, [selectedMember]);
 
+  
   useEffect(() => {
     if (selectedMember && selectedMember.status === "blog") {
       const now = new Date();
       const expirationDate = selectedMember.expirationDate.toDate();
-
-      console.log(expirationDate);
+      
+      console.log(expirationDate)
 
       if (now > expirationDate) {
         setSelectedStatus("active");
@@ -205,7 +207,7 @@ export default function FromMembers({ selectedMember }) {
       }
     }
   }, []);
-
+  
   const handleConfirmBlock = () => {
     if (blockReason.trim() === "") {
       alert("กรุณากรอกข้อความในช่องรายละเอียด");
@@ -215,7 +217,7 @@ export default function FromMembers({ selectedMember }) {
 
     setOpenBlockDialog(false);
   };
-
+  
   const handleCloseBlockDialog = () => {
     setOpenBlockDialog(false);
   };
@@ -270,9 +272,11 @@ export default function FromMembers({ selectedMember }) {
       md={8}
     >
       {selectedMember ? (
-        <Paper elevation={1} sx={{ p: 2 }}>
+        <Paper
+        elevation={1} sx={{ p: 2 }}
+        >
           <Dialog open={openBlockDialog} onClose={handleCloseBlockDialog}>
-            <DialogTitle>บล็อกผู้ใช้</DialogTitle>
+            <DialogTitle>ฺบล็อกผู้ใช้</DialogTitle>
             <DialogContent>
               <DialogContentText>
                 กรุณาใส่รายละเอียดของการบล็อก

@@ -272,7 +272,7 @@ export default function FromMembers({ selectedMember }) {
       {selectedMember ? (
         <Paper elevation={1} sx={{ p: 2 }}>
           <Dialog open={openBlockDialog} onClose={handleCloseBlockDialog}>
-            <DialogTitle>บล็อกผู้ใช้</DialogTitle>
+            <DialogTitle>ฺบล็อกผู้ใช้</DialogTitle>
             <DialogContent>
               <DialogContentText>
                 กรุณาใส่รายละเอียดของการบล็อก

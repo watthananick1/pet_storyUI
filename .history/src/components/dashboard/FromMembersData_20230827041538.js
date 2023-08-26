@@ -137,16 +137,16 @@ export default function FromMembers({ selectedMember }) {
     width: 100,
     height: 100,
   });
-
+  
   const handleBlock = () => {
     setOpenBlockDialog(true);
   };
-
+  
   const handleUpdateReportUser = async () => {
     try {
       setLoading(true);
       //console.log(new Date().setHours(new Date().getHours() + 72));
-      await usersCollection.doc(selectedMember.id).update({
+      await usersCollection.doc(selectedMember.reported_id).update({
         status: status,
         expirationDate: new Date().setHours(new Date().getHours() + 72),
         blockReason: blockReason,
@@ -163,8 +163,9 @@ export default function FromMembers({ selectedMember }) {
   useEffect(() => {
     if (selectedMember) {
       //console.log(selectedMember);
-      setFirstName(selectedMember.firstName);
-      setLastName(selectedMember.lastName);
+     const userDoc = await usersCollection.doc(selectedMember.reported_id).get();
+      setFirstName(selectedMember.reported_firstName);
+      setLastName(selectedMember.reported_lastName);
       setEmail(selectedMember.email);
       setStatus(selectedMember.status);
       switch (selectedMember.statusUser) {
@@ -182,16 +183,18 @@ export default function FromMembers({ selectedMember }) {
           break;
       }
       setImagePreview(selectedMember.profilePicture);
-      setExpirationDate(selectedMember.setExpirationDate);
+      setExpirationDate(selectedMember.setExpirationDate)
+    
     }
   }, [selectedMember]);
 
+  
   useEffect(() => {
     if (selectedMember && selectedMember.status === "blog") {
       const now = new Date();
       const expirationDate = selectedMember.expirationDate.toDate();
-
-      console.log(expirationDate);
+      
+      console.log(expirationDate)
 
       if (now > expirationDate) {
         setSelectedStatus("active");
@@ -205,7 +208,7 @@ export default function FromMembers({ selectedMember }) {
       }
     }
   }, []);
-
+  
   const handleConfirmBlock = () => {
     if (blockReason.trim() === "") {
       alert("กรุณากรอกข้อความในช่องรายละเอียด");
@@ -215,7 +218,7 @@ export default function FromMembers({ selectedMember }) {
 
     setOpenBlockDialog(false);
   };
-
+  
   const handleCloseBlockDialog = () => {
     setOpenBlockDialog(false);
   };
@@ -270,9 +273,13 @@ export default function FromMembers({ selectedMember }) {
       md={8}
     >
       {selectedMember ? (
-        <Paper elevation={1} sx={{ p: 2 }}>
+        <Paper
+          sx={{
+            p: 2,
+          }}
+        >
           <Dialog open={openBlockDialog} onClose={handleCloseBlockDialog}>
-            <DialogTitle>บล็อกผู้ใช้</DialogTitle>
+            <DialogTitle>ฺบล็อกผู้ใช้</DialogTitle>
             <DialogContent>
               <DialogContentText>
                 กรุณาใส่รายละเอียดของการบล็อก

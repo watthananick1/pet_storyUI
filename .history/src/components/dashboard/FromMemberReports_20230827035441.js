@@ -15,10 +15,9 @@ import Cookies from "js-cookie";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SaveIcon from "@mui/icons-material/Save";
 import Typography from "@mui/material/Typography";
-import FromMembers from "./FromMembersData";
+im
 import Autocomplete from "@mui/material/Autocomplete";
 import { format } from "date-fns";
-import Divider from "@mui/material/Divider";
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 import "firebase/compat/storage";
@@ -35,6 +34,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const firestore = firebase.firestore();
 const reportUsersCollection = firestore.collection("Report_User");
+
 
 const path = process.env.REACT_APP_PATH_ID;
 
@@ -125,7 +125,7 @@ export default function FromMemberReports({ selectedMember }) {
 
   useEffect(() => {
     if (selectedMember) {
-      console.log(selectedMember);
+      //console.log(selectedMember);
       setFirstName(selectedMember.reported_firstName);
       setLastName(selectedMember.reported_lastName);
       setSelectedStatus(selectedMember.status);
@@ -144,12 +144,10 @@ export default function FromMemberReports({ selectedMember }) {
   const handleUpdateReportUser = async () => {
     try {
       setLoading(true);
-      await reportUsersCollection
-        .doc(selectedMember.id ?? selectedMember.reported_id)
-        .update({
-          status: selectedStatus,
-          updatedAt: new Date(),
-        });
+      await reportUsersCollection.doc(selectedMember.id).update({
+        status: selectedStatus,
+        updatedAt: new Date(),
+      });
       //console.log("run...");
     } catch (error) {
       console.error("Error updating status:", error.message);
@@ -201,13 +199,7 @@ export default function FromMemberReports({ selectedMember }) {
                 </Typography>
               </Grid>
               <Grid item xs={12} md={12}>
-                <Divider variant="middle" />
-              </Grid>
-              <Grid item xs={12} md={12}>
-                <FromMembers selectedMember={selectedMember} />
-              </Grid>
-              <Grid item xs={12} md={12}>
-                <Divider variant="middle" />
+                
               </Grid>
               <Grid item xs={12} md={12}>
                 <Paper elevation={1} sx={{ p: 2 }}>

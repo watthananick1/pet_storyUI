@@ -41,11 +41,10 @@ function geteUserData(
 
 function geteReportUserData(
   id,
-  reported_id,
+  reported_id
   reported_profilePicture,
   reported_firstName,
   reported_lastName,
-  reporter_id,
   reporter_profilePicture,
   reporter_firstName,
   reporter_lastName,
@@ -56,11 +55,9 @@ function geteReportUserData(
 ) {
   return {
     id,
-    reported_id,
     reported_profilePicture,
     reported_firstName,
     reported_lastName,
-    reporter_id,
     reporter_profilePicture,
     reporter_firstName,
     reporter_lastName,
@@ -198,11 +195,9 @@ export default function DataGridSection({ sort }) {
 
               return geteReportUserData(
                 reportUserData.report_id,
-                dataReported.member_id,
                 dataReported.profilePicture,
                 dataReported.firstName,
                 dataReported.lastName,
-                dataReporter.member_id,
                 dataReporter.profilePicture,
                 dataReporter.firstName,
                 dataReporter.lastName,

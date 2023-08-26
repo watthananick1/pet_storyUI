@@ -198,11 +198,10 @@ export default function DataGridSection({ sort }) {
 
               return geteReportUserData(
                 reportUserData.report_id,
-                dataReported.member_id,
+                
                 dataReported.profilePicture,
                 dataReported.firstName,
                 dataReported.lastName,
-                dataReporter.member_id,
                 dataReporter.profilePicture,
                 dataReporter.firstName,
                 dataReporter.lastName,

@@ -137,16 +137,16 @@ export default function FromMembers({ selectedMember }) {
     width: 100,
     height: 100,
   });
-
+  
   const handleBlock = () => {
     setOpenBlockDialog(true);
   };
-
+  
   const handleUpdateReportUser = async () => {
     try {
       setLoading(true);
       //console.log(new Date().setHours(new Date().getHours() + 72));
-      await usersCollection.doc(selectedMember.id).update({
+      await usersCollection.doc(selectedMember.reported_id).update({
         status: status,
         expirationDate: new Date().setHours(new Date().getHours() + 72),
         blockReason: blockReason,
@@ -160,13 +160,20 @@ export default function FromMembers({ selectedMember }) {
     }
   };
 
-  useEffect(() => {
+  useEffect(async () => {
     if (selectedMember) {
-      //console.log(selectedMember);
-      setFirstName(selectedMember.firstName);
-      setLastName(selectedMember.lastName);
-      setEmail(selectedMember.email);
+      // Fetch user data based on the reported_id
+      const userDoc = await usersCollection.doc(selectedMember.reported_id).get();
+      const userData = userDoc.data();
+      console.log(object)
+      
+      // Set state variables using the fetched data
+      setFirstName(userData.firstName);
+      setLastName(userData.lastName);
+      setEmail(userData.email);
       setStatus(selectedMember.status);
+      
+      // Set the selected status value based on the statusUser from selectedMember
       switch (selectedMember.statusUser) {
         case "ADMIN":
           setValue({ label: "Admin", value: "ADMIN" });
@@ -181,6 +188,8 @@ export default function FromMembers({ selectedMember }) {
           setValue({ label: "User", value: "USER" });
           break;
       }
+      
+      // Set image preview, expiration date, or any other relevant state variables
       setImagePreview(selectedMember.profilePicture);
       setExpirationDate(selectedMember.setExpirationDate);
     }
@@ -190,8 +199,8 @@ export default function FromMembers({ selectedMember }) {
     if (selectedMember && selectedMember.status === "blog") {
       const now = new Date();
       const expirationDate = selectedMember.expirationDate.toDate();
-
-      console.log(expirationDate);
+      
+      console.log(expirationDate)
 
       if (now > expirationDate) {
         setSelectedStatus("active");
@@ -205,7 +214,7 @@ export default function FromMembers({ selectedMember }) {
       }
     }
   }, []);
-
+  
   const handleConfirmBlock = () => {
     if (blockReason.trim() === "") {
       alert("กรุณากรอกข้อความในช่องรายละเอียด");
@@ -215,7 +224,7 @@ export default function FromMembers({ selectedMember }) {
 
     setOpenBlockDialog(false);
   };
-
+  
   const handleCloseBlockDialog = () => {
     setOpenBlockDialog(false);
   };
@@ -270,9 +279,13 @@ export default function FromMembers({ selectedMember }) {
       md={8}
     >
       {selectedMember ? (
-        <Paper elevation={1} sx={{ p: 2 }}>
+        <Paper
+          sx={{
+            p: 2,
+          }}
+        >
           <Dialog open={openBlockDialog} onClose={handleCloseBlockDialog}>
-            <DialogTitle>บล็อกผู้ใช้</DialogTitle>
+            <DialogTitle>ฺบล็อกผู้ใช้</DialogTitle>
             <DialogContent>
               <DialogContentText>
                 กรุณาใส่รายละเอียดของการบล็อก

@@ -202,7 +202,6 @@ export default function DataGridSection({ sort }) {
                 dataReported.profilePicture,
                 dataReported.firstName,
                 dataReported.lastName,
-                dataReporter.member_id,
                 dataReporter.profilePicture,
                 dataReporter.firstName,
                 dataReporter.lastName,

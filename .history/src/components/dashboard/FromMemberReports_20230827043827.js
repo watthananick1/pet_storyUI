@@ -201,9 +201,6 @@ export default function FromMemberReports({ selectedMember }) {
                 </Typography>
               </Grid>
               <Grid item xs={12} md={12}>
-                <Divider variant="middle" />
-              </Grid>
-              <Grid item xs={12} md={12}>
                 <FromMembers selectedMember={selectedMember} />
               </Grid>
               <Grid item xs={12} md={12}>
