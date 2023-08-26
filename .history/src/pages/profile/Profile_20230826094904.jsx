@@ -42,7 +42,6 @@ export default function Profile() {
   const token = Cookies.get("token");
   const dataUser = JSON.parse(localStorage.getItem("user"));
   const path = process.env.REACT_APP_PATH_ID;
-  const [isMounted, setIsMounted] = useState(true);
 
   useEffect(() => {
     setIsUser(currentUser.firstName === user?.firstName);
@@ -68,16 +67,14 @@ export default function Profile() {
             Authorization: `Bearer ${token}`,
           },
         });
-
-        if (isMounted) {
-          setUser(res?.data[0]);
-        }
+        setUser(res?.data[0]);
+        //console.log("data", res?.data[0]);
       } catch (error) {
         console.log(error);
       }
     };
     fetchUser();
-  }, [firstName, isMounted]);
+  }, [firstName]);
 
   const Image = styled("div")(({ theme }) => ({
     position: "relative",

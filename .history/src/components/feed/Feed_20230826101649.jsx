@@ -80,9 +80,9 @@ export default function Feed({ firstName, onProfile, sort }) {
   //   fetchUserPosts();
   // }, [filterPost, filterText]);
 
-  // useEffect(() => {
-  //   console.log("posts", posts);
-  // }, [posts]);
+  useEffect(() => {
+    console.log("posts", posts);
+  }, [posts]);
 
   const applySortingAndFiltering = (posts) => {
     // Filter posts based on the selected filter

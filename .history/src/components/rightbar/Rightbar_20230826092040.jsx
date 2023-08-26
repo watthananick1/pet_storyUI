@@ -73,13 +73,11 @@ function BasicSelect({ user }) {
           label="Age"
           onChange={handleChange}
         >
-          {user &&
-            user.typePets &&
-            user.typePets.map((tag) => (
-              <MenuItem key={tag} value={tag}>
-                {tag}
-              </MenuItem>
-            ))}
+          {user && user.typePets && user.typePets.map((tag) => (
+  <MenuItem key={tag} value={tag}>
+    {tag}
+  </MenuItem>
+))}
 
           <MenuItem value={""}>All</MenuItem>
         </Select>
@@ -172,51 +170,54 @@ export function Rightbar({ user }) {
   };
 
   useEffect(() => {
-    let isMounted = true; // A flag to track component mount status
-  
     const getFriends = async () => {
       try {
-        const currentUserRef = firestore.collection("Users").doc(user?.member_id);
+        //console.log("user", currentUser);
+        const currentUserRef = firestore
+          .collection("Users")
+          .doc(user?.member_id);
         const currentUserDoc = await currentUserRef.get();
-        const followers = currentUserDoc?.data()?.followers || [];
-        const followings = currentUserDoc?.data()?.followings || [];
-  
-        const friendPromises = followers.map(async (friend) => {
-          const friendRef = firestore.collection("Users").doc(friend);
-          const friendDoc = await friendRef.get();
-          return friendDoc.data();
-        });
-  
-        const friendFollowingPromises = followings.map(async (friend) => {
-          const friendRef = firestore.collection("Users").doc(friend);
-          const friendDoc = await friendRef.get();
-          return friendDoc.data();
-        });
-  
+
+        const friendPromises = currentUserDoc
+          .data()
+          .followers.map(async (friend) => {
+            //console.log("data", friend);
+            const friendRef = firestore.collection("Users").doc(friend);
+            const friendDoc = await friendRef.get();
+
+            return friendDoc.data();
+          });
+        const friendFollowingPromises = currentUserDoc
+          .data()
+          .followings.map(async (friend) => {
+            //console.log("data", friend);
+            const friendRef = firestore.collection("Users").doc(friend);
+            const friendDoc = await friendRef.get();
+
+            return friendDoc.data();
+          });
+
         const fetchedFriends = await Promise.all(friendPromises);
         const fetchedFollowing = await Promise.all(friendFollowingPromises);
-  
-        const currentUpdateUserRef = firestore.collection("Users").doc(currentUser?.member_id);
+
+        const currentUpdateUserRef = firestore
+          .collection("Users")
+          .doc(currentUser?.member_id);
         const currentUpdateUserDoc = (await currentUpdateUserRef.get()).data();
-  
-        if (isMounted) {
-          // Update state only if the component is still mounted
-          setFriendsfollowings(fetchedFollowing);
-          setFriends(fetchedFriends);
-          setFollowed(currentUpdateUserDoc.followings.includes(user?.member_id));
-        }
+
+        //console.log("ww", currentUpdateUserDoc);
+
+        setFriendsfollowings(fetchedFollowing);
+        setFriends(fetchedFriends);
+        setFollowed(currentUpdateUserDoc.followings.includes(user?.member_id));
+        //console.log(fetchedFriends);
       } catch (err) {
         console.log(err);
       }
     };
-  
+
     getFriends();
-  
-    return () => {
-      isMounted = false; // Component is unmounting, set the flag to false
-    };
   }, [user, followings]);
-  
 
   useEffect(() => {
     const usersRef = firestore.collection("Users");
@@ -592,51 +593,54 @@ export function RightbarR({ user }) {
   }, [currentUser.followings]);
 
   useEffect(() => {
-    let isMounted = true; // A flag to track component mount status
-  
     const getFriends = async () => {
       try {
-        const currentUserRef = firestore.collection("Users").doc(user?.member_id);
+        //console.log("user", currentUser);
+        const currentUserRef = firestore
+          .collection("Users")
+          .doc(user?.member_id);
         const currentUserDoc = await currentUserRef.get();
-        const followers = currentUserDoc?.data()?.followers || [];
-        const followings = currentUserDoc?.data()?.followings || [];
-  
-        const friendPromises = followers.map(async (friend) => {
-          const friendRef = firestore.collection("Users").doc(friend);
-          const friendDoc = await friendRef.get();
-          return friendDoc.data();
-        });
-  
-        const friendFollowingPromises = followings.map(async (friend) => {
-          const friendRef = firestore.collection("Users").doc(friend);
-          const friendDoc = await friendRef.get();
-          return friendDoc.data();
-        });
-  
+
+        const friendPromises = currentUserDoc
+          .data()
+          .followers.map(async (friend) => {
+            //console.log("data", friend);
+            const friendRef = firestore.collection("Users").doc(friend);
+            const friendDoc = await friendRef.get();
+
+            return friendDoc.data();
+          });
+        const friendFollowingPromises = currentUserDoc
+          .data()
+          .followings.map(async (friend) => {
+            //console.log("data", friend);
+            const friendRef = firestore.collection("Users").doc(friend);
+            const friendDoc = await friendRef.get();
+
+            return friendDoc.data();
+          });
+
         const fetchedFriends = await Promise.all(friendPromises);
         const fetchedFollowing = await Promise.all(friendFollowingPromises);
-  
-        const currentUpdateUserRef = firestore.collection("Users").doc(currentUser?.member_id);
+
+        const currentUpdateUserRef = firestore
+          .collection("Users")
+          .doc(currentUser?.member_id);
         const currentUpdateUserDoc = (await currentUpdateUserRef.get()).data();
-  
-        if (isMounted) {
-          // Update state only if the component is still mounted
-          setFriendsfollowings(fetchedFollowing);
-          setFriends(fetchedFriends);
-          setFollowed(currentUpdateUserDoc.followings.includes(user?.member_id));
-        }
+
+        //console.log("ww", currentUpdateUserDoc);
+
+        setFriendsfollowings(fetchedFollowing);
+        setFriends(fetchedFriends);
+        setFollowed(currentUpdateUserDoc.followings.includes(user?.member_id));
+        //console.log(fetchedFriends);
       } catch (err) {
         console.log(err);
       }
     };
-  
+
     getFriends();
-  
-    return () => {
-      isMounted = false; // Component is unmounting, set the flag to false
-    };
   }, [user, followings]);
-  
   //++++++++++ on Click Button +++++++++++
 
   const handleClick = async () => {

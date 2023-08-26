@@ -210,11 +210,7 @@ export default function Post({ isPost, onPostUpdate, index }) {
     { label: "ส่วนตัว", value: "private" },
     { label: "เฉพาะผู้ติดตาม", value: "followers" },
   ];
-  
-  // useEffect(() => {
-  //   console.log("object", isPost);
-  // }, [isPost]);
-  
+
   useEffect(() => {
     const element = document.querySelector(".content");
     if (element) {
@@ -859,7 +855,7 @@ export default function Post({ isPost, onPostUpdate, index }) {
       )}
       {openReportModal && (
         <ReportModal
-          key={index}
+          key={indexPost}
           onClose={() => setOpenReportModal(false)}
           onContent={dataEdit}
           onTitle={typeModal}

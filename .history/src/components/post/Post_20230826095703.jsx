@@ -211,9 +211,9 @@ export default function Post({ isPost, onPostUpdate, index }) {
     { label: "เฉพาะผู้ติดตาม", value: "followers" },
   ];
   
-  // useEffect(() => {
-  //   console.log("object", isPost);
-  // }, [isPost]);
+  useEffect(() => {
+    console.log(object)
+  }, [isPost]);
   
   useEffect(() => {
     const element = document.querySelector(".content");

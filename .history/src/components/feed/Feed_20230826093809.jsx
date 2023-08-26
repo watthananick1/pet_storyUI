@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, forwardRef } from "react";
+import { useContext, useEffect, useState, forwardRef } from "react";
 import Post from "../post/Post";
 import Share from "../share/Share";
 import "./feed.css";
@@ -51,7 +51,6 @@ export default function Feed({ firstName, onProfile, sort }) {
   const [placement, setPlacement] = useState();
   const [countPost, setCountPost] = useState(0);
   const [sortedPosts, setSortedPosts] = useState([]);
-  const [errorMessage, setErrorMessage] = useState("");
   const token = Cookies.get("token");
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const {
@@ -71,18 +70,14 @@ export default function Feed({ firstName, onProfile, sort }) {
   const [filter, setFilter] = useState(filterPost);
   const [filterTextdata, setfilterText] = useState(filterText);
 
-  // useEffect(() => {
-  //   setFilter(filterPost);
-  //   setfilterText(filterText);
-  //console.log("filterPost", filterPost);
-  //console.log("filterText", filterText);
-  // fetchSortUserPosts();
-  //   fetchUserPosts();
-  // }, [filterPost, filterText]);
-
-  // useEffect(() => {
-  //   console.log("posts", posts);
-  // }, [posts]);
+  useEffect(() => {
+    setFilter(filterPost);
+    setfilterText(filterText);
+    //console.log("filterPost", filterPost);
+    //console.log("filterText", filterText);
+    // fetchSortUserPosts();
+    fetchUserPosts();
+  }, [filterPost, filterText]);
 
   const applySortingAndFiltering = (posts) => {
     // Filter posts based on the selected filter
@@ -102,16 +97,17 @@ export default function Feed({ firstName, onProfile, sort }) {
     const filteredAndSortedPosts = filteredPosts.filter((post) => {
       const data = post.tagpet || [];
       //console.log("data", data);
-      if (filterText !== "" && filterText !== null) {
+      if (filterText !== "" && filterText !== null) { 
         const result = data.some(
           (tag) => tag.toLowerCase() === filterText?.toLowerCase()
         );
         return result;
       }
-      return true;
+      return true; 
     });
-
+    
     //console.log("object", filteredAndSortedPosts);
+  
 
     return filteredAndSortedPosts;
   };
@@ -163,32 +159,17 @@ export default function Feed({ firstName, onProfile, sort }) {
     } catch (error) {
       dispatch(Messageupdate("Failed Request Post", true, "error"));
       if (error.response) {
-        if (
-          error.response.status === 404 &&
-          error.response.data.message === "User not found"
-        ) {
+        if (error.response.status === 404 && error.response.data.message === "User not found") {
           // Display a message to the user indicating that the user was not found
-          console.log(
-            "User not found. Displaying appropriate message to the user."
-          );
-          // You can update your state to display the message in your component
-          setErrorMessage("User not found. Please check the user's name.");
+          console.log("User not found. Display appropriate message to the user.");
         } else {
           // Handle other error scenarios
           console.log("Error:", error.response.data.message);
-          // You can update your state to display a general error message in your component
-          setErrorMessage(
-            "An error occurred while fetching user posts. Please try again later."
-          );
         }
       } else if (error.request) {
         console.log("Request:", error.request);
       } else {
         console.log("Error:", error.message);
-        // You can update your state to display a general error message in your component
-        setErrorMessage(
-          "An error occurred while fetching user posts. Please try again later."
-        );
       }
     } finally {
       setLoading(false);
@@ -222,20 +203,11 @@ export default function Feed({ firstName, onProfile, sort }) {
 
     if (onProfile) {
       console.log("onProfile", onProfile);
-      fetchUserPosts();
+      // fetchUserPosts();
     } else {
       fetchPosts();
     }
   };
-
-  useEffect(() => {
-    if (onProfile) {
-      console.log("onProfile", onProfile);
-      fetchUserPosts();
-    } else {
-      fetchPosts();
-    }
-  }, [ filterPost, filterText]);
 
   useEffect(() => {
     //console.log(newPosts);
@@ -337,39 +309,38 @@ export default function Feed({ firstName, onProfile, sort }) {
       }
     };
 
-    const fetchUserProPosts = async () => {
-      try {
-        const currentTime = new Date().getTime();
+    // const fetchUserProPosts = async () => {
+    //   try {
+    //     const currentTime = new Date().getTime();
 
-        //setLoading(true);
-        isSetOpen(false);
-        console.log("firstName", firstName);
-        const res = await axios.get(
-          `${path}/api/posts/user/${firstName}/date`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+    //     //setLoading(true);
+    //     isSetOpen(false);
+    //     console.log("firstName", firstName);
+    //     const res = await axios.get(
+    //       `${path}/api/posts/user/${firstName}/date`,
+    //       {
+    //         headers: {
+    //           Authorization: `Bearer ${token}`,
+    //         },
+    //       }
+    //     );
 
-        // const sortedFilteredPosts = await applySortingAndFiltering(res.data);
+    //     const sortedFilteredPosts = await applySortingAndFiltering(res.data);
 
-        // console.log("sortedFilteredPosts", sortedFilteredPosts);
+    //     //console.log("sortedFilteredPosts", sortedFilteredPosts);
 
-        // setPosts(sortedFilteredPosts);
-        setPosts(res.data);
-      } catch (error) {
-        dispatch(Messageupdate("Failed Request Post", true, "error"));
-        console.log(error);
-      } finally {
-        //setLoading(false);
-      }
-    };
+    //     setPosts(sortedFilteredPosts);
+    //   } catch (error) {
+    //     dispatch(Messageupdate("Failed Request Post", true, "error"));
+    //     console.log(error);
+    //   } finally {
+    //     //setLoading(false);
+    //   }
+    // };
 
     if (onProfile) {
-      console.log("onProfile1", onProfile);
-      fetchUserProPosts();
+      //console.log('onProfile1', onProfile)
+      fetchUserPosts();
     } else {
       fetchPosts();
     }
@@ -381,7 +352,7 @@ export default function Feed({ firstName, onProfile, sort }) {
       // socket.off("newPost", handleNewPost);
       socket.disconnect();
     };
-  }, [onProfile, firstName, user.member_id]);
+  }, [onProfile, firstName, user.member_id, newPosts, issort, filterPost, filterText]);
 
   useEffect(() => {
     try {
@@ -494,27 +465,16 @@ export default function Feed({ firstName, onProfile, sort }) {
               />
             </div>
           ) : (
-            <React.Fragment>
+            <>
               {Open
                 ? newPosts.map((p, i) => (
-                    <Post
-                      key={i}
-                      timestamp={p.timestamp}
-                      isPost={p}
-                      index={i}
-                      // ... other necessary props
-                    />
+                    <Post key={i} isPost={p} indexPost={i} />
                   ))
                 : null}
               {posts.map((p, i) => (
-                <Post
-                  key={i}
-                  isPost={p}
-                  index={i}
-                  // ... other necessary props
-                />
+                <Post key={i} isPost={p} indexPost={i} />
               ))}
-            </React.Fragment>
+            </>
           )}
         </div>
       </SnackbarProvider>

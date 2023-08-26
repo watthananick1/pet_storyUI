@@ -153,7 +153,7 @@ function renderItem({
   );
 }
 
-export default function Post({ isPost, onPostUpdate, index }) {
+export default function Post({ isPost, onPostUpdate, indexPost }) {
   const { user, dispatch } = useContext(AuthContext);
   const [post, setPost] = useState(isPost);
   const [like, setLike] = useState(post.likes.length);
@@ -210,11 +210,7 @@ export default function Post({ isPost, onPostUpdate, index }) {
     { label: "ส่วนตัว", value: "private" },
     { label: "เฉพาะผู้ติดตาม", value: "followers" },
   ];
-  
-  // useEffect(() => {
-  //   console.log("object", isPost);
-  // }, [isPost]);
-  
+
   useEffect(() => {
     const element = document.querySelector(".content");
     if (element) {
@@ -606,7 +602,7 @@ export default function Post({ isPost, onPostUpdate, index }) {
   };
 
   return (
-    <div className="post" key={index}>
+    <div className="post" key={indexPost}>
       <Paper elevation={3} className="postWrapper">
         <CardHeader
           avatar={
@@ -702,13 +698,13 @@ export default function Post({ isPost, onPostUpdate, index }) {
               post?.content
             ) : (
               <PostText>
-                {post?.content.split("\n").slice(0, 3).join("\n")}{" "}
-                {post?.content.split("\n").length > 3 && ""}
+                {post.content.split("\n").slice(0, 3).join("\n")}{" "}
+                {post.content.split("\n").length > 3 && ""}
               </PostText>
             )}
           </div>
 
-          {post?.content.split("\n").length > 3 && (
+          {post.content.split("\n").length > 3 && (
             <Box
               component="button"
               onClick={toggleExpand}
@@ -748,8 +744,8 @@ export default function Post({ isPost, onPostUpdate, index }) {
         </CardContent>
         <CardMedia component="div" style={{ width: "100%" }}>
           <SortableList
-            items={post?.img.map((item) => ({
-              type: post?.title,
+            items={post.img.map((item) => ({
+              type: post.title,
               url: item,
             }))}
             axis="xy"
@@ -842,7 +838,7 @@ export default function Post({ isPost, onPostUpdate, index }) {
       </Paper>
       {openModal && (
         <NestedModal
-          key={index}
+          key={indexPost}
           onClose={() => setOpenModal(false)}
           onContent={dataEdit}
           onTitle={typeModal}
@@ -859,7 +855,7 @@ export default function Post({ isPost, onPostUpdate, index }) {
       )}
       {openReportModal && (
         <ReportModal
-          key={index}
+          key={indexPost}
           onClose={() => setOpenReportModal(false)}
           onContent={dataEdit}
           onTitle={typeModal}

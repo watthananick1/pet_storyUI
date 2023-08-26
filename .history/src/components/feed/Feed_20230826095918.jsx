@@ -71,18 +71,18 @@ export default function Feed({ firstName, onProfile, sort }) {
   const [filter, setFilter] = useState(filterPost);
   const [filterTextdata, setfilterText] = useState(filterText);
 
-  // useEffect(() => {
-  //   setFilter(filterPost);
-  //   setfilterText(filterText);
-  //console.log("filterPost", filterPost);
-  //console.log("filterText", filterText);
-  // fetchSortUserPosts();
-  //   fetchUserPosts();
-  // }, [filterPost, filterText]);
-
-  // useEffect(() => {
-  //   console.log("posts", posts);
-  // }, [posts]);
+  useEffect(() => {
+    setFilter(filterPost);
+    setfilterText(filterText);
+    //console.log("filterPost", filterPost);
+    //console.log("filterText", filterText);
+    // fetchSortUserPosts();
+    fetchUserPosts();
+  }, [filterPost, filterText]);
+  
+  useEffect(() => {
+    cl
+  }, [posts]);
 
   const applySortingAndFiltering = (posts) => {
     // Filter posts based on the selected filter
@@ -222,20 +222,11 @@ export default function Feed({ firstName, onProfile, sort }) {
 
     if (onProfile) {
       console.log("onProfile", onProfile);
-      fetchUserPosts();
+      // fetchUserPosts();
     } else {
       fetchPosts();
     }
   };
-
-  useEffect(() => {
-    if (onProfile) {
-      console.log("onProfile", onProfile);
-      fetchUserPosts();
-    } else {
-      fetchPosts();
-    }
-  }, [ filterPost, filterText]);
 
   useEffect(() => {
     //console.log(newPosts);
@@ -337,39 +328,38 @@ export default function Feed({ firstName, onProfile, sort }) {
       }
     };
 
-    const fetchUserProPosts = async () => {
-      try {
-        const currentTime = new Date().getTime();
+    // const fetchUserProPosts = async () => {
+    //   try {
+    //     const currentTime = new Date().getTime();
 
-        //setLoading(true);
-        isSetOpen(false);
-        console.log("firstName", firstName);
-        const res = await axios.get(
-          `${path}/api/posts/user/${firstName}/date`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+    //     //setLoading(true);
+    //     isSetOpen(false);
+    //     console.log("firstName", firstName);
+    //     const res = await axios.get(
+    //       `${path}/api/posts/user/${firstName}/date`,
+    //       {
+    //         headers: {
+    //           Authorization: `Bearer ${token}`,
+    //         },
+    //       }
+    //     );
 
-        // const sortedFilteredPosts = await applySortingAndFiltering(res.data);
+    //     const sortedFilteredPosts = await applySortingAndFiltering(res.data);
 
-        // console.log("sortedFilteredPosts", sortedFilteredPosts);
+    //     //console.log("sortedFilteredPosts", sortedFilteredPosts);
 
-        // setPosts(sortedFilteredPosts);
-        setPosts(res.data);
-      } catch (error) {
-        dispatch(Messageupdate("Failed Request Post", true, "error"));
-        console.log(error);
-      } finally {
-        //setLoading(false);
-      }
-    };
+    //     setPosts(sortedFilteredPosts);
+    //   } catch (error) {
+    //     dispatch(Messageupdate("Failed Request Post", true, "error"));
+    //     console.log(error);
+    //   } finally {
+    //     //setLoading(false);
+    //   }
+    // };
 
     if (onProfile) {
-      console.log("onProfile1", onProfile);
-      fetchUserProPosts();
+      //console.log('onProfile1', onProfile)
+      fetchUserPosts();
     } else {
       fetchPosts();
     }
@@ -381,7 +371,15 @@ export default function Feed({ firstName, onProfile, sort }) {
       // socket.off("newPost", handleNewPost);
       socket.disconnect();
     };
-  }, [onProfile, firstName, user.member_id]);
+  }, [
+    onProfile,
+    firstName,
+    user.member_id,
+    newPosts,
+    issort,
+    filterPost,
+    filterText,
+  ]);
 
   useEffect(() => {
     try {
@@ -499,9 +497,10 @@ export default function Feed({ firstName, onProfile, sort }) {
                 ? newPosts.map((p, i) => (
                     <Post
                       key={i}
+                      author={p.author_id}
+                      name={p.name}
                       timestamp={p.timestamp}
-                      isPost={p}
-                      index={i}
+                      likes={p.likes || []}
                       // ... other necessary props
                     />
                   ))
@@ -509,8 +508,10 @@ export default function Feed({ firstName, onProfile, sort }) {
               {posts.map((p, i) => (
                 <Post
                   key={i}
-                  isPost={p}
-                  index={i}
+                  author={p.author_id}
+                  name={p.name}
+                  timestamp={p.timestamp}
+                  likes={p.likes || []}
                   // ... other necessary props
                 />
               ))}

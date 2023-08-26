@@ -71,18 +71,18 @@ export default function Feed({ firstName, onProfile, sort }) {
   const [filter, setFilter] = useState(filterPost);
   const [filterTextdata, setfilterText] = useState(filterText);
 
-  // useEffect(() => {
-  //   setFilter(filterPost);
-  //   setfilterText(filterText);
-  //console.log("filterPost", filterPost);
-  //console.log("filterText", filterText);
-  // fetchSortUserPosts();
-  //   fetchUserPosts();
-  // }, [filterPost, filterText]);
-
-  // useEffect(() => {
-  //   console.log("posts", posts);
-  // }, [posts]);
+  useEffect(() => {
+    setFilter(filterPost);
+    setfilterText(filterText);
+    //console.log("filterPost", filterPost);
+    //console.log("filterText", filterText);
+    // fetchSortUserPosts();
+    fetchUserPosts();
+  }, [filterPost, filterText]);
+  
+  useEffect(() => {
+    console.log("posts", posts);
+  }, [posts]);
 
   const applySortingAndFiltering = (posts) => {
     // Filter posts based on the selected filter
@@ -222,20 +222,11 @@ export default function Feed({ firstName, onProfile, sort }) {
 
     if (onProfile) {
       console.log("onProfile", onProfile);
-      fetchUserPosts();
+      // fetchUserPosts();
     } else {
       fetchPosts();
     }
   };
-
-  useEffect(() => {
-    if (onProfile) {
-      console.log("onProfile", onProfile);
-      fetchUserPosts();
-    } else {
-      fetchPosts();
-    }
-  }, [ filterPost, filterText]);
 
   useEffect(() => {
     //console.log(newPosts);
@@ -368,7 +359,7 @@ export default function Feed({ firstName, onProfile, sort }) {
     };
 
     if (onProfile) {
-      console.log("onProfile1", onProfile);
+      console.log('onProfile1', onProfile)
       fetchUserProPosts();
     } else {
       fetchPosts();
@@ -381,7 +372,13 @@ export default function Feed({ firstName, onProfile, sort }) {
       // socket.off("newPost", handleNewPost);
       socket.disconnect();
     };
-  }, [onProfile, firstName, user.member_id]);
+  }, [
+    onProfile,
+    firstName,
+    user.member_id,
+    filterPost,
+    filterText,
+  ]);
 
   useEffect(() => {
     try {

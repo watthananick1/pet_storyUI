@@ -80,9 +80,9 @@ export default function Feed({ firstName, onProfile, sort }) {
   //   fetchUserPosts();
   // }, [filterPost, filterText]);
 
-  // useEffect(() => {
-  //   console.log("posts", posts);
-  // }, [posts]);
+  useEffect(() => {
+    console.log("posts", posts);
+  }, [posts]);
 
   const applySortingAndFiltering = (posts) => {
     // Filter posts based on the selected filter
@@ -235,7 +235,7 @@ export default function Feed({ firstName, onProfile, sort }) {
     } else {
       fetchPosts();
     }
-  }, [ filterPost, filterText]);
+  }, []);
 
   useEffect(() => {
     //console.log(newPosts);
@@ -381,7 +381,7 @@ export default function Feed({ firstName, onProfile, sort }) {
       // socket.off("newPost", handleNewPost);
       socket.disconnect();
     };
-  }, [onProfile, firstName, user.member_id]);
+  }, [onProfile, firstName, user.member_id, filterPost, filterText]);
 
   useEffect(() => {
     try {

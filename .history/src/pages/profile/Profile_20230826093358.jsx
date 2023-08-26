@@ -42,7 +42,6 @@ export default function Profile() {
   const token = Cookies.get("token");
   const dataUser = JSON.parse(localStorage.getItem("user"));
   const path = process.env.REACT_APP_PATH_ID;
-  const [isMounted, setIsMounted] = useState(true);
 
   useEffect(() => {
     setIsUser(currentUser.firstName === user?.firstName);
@@ -50,14 +49,6 @@ export default function Profile() {
     // console.log("UfirstName", user.firstName);
     // console.log("UfirstName", user);
   }, [firstName, currentUser, user]);
-  
-  useEffect(() => {
-    setIsMounted(true); // Component is mounted
-
-    return () => {
-      setIsMounted(false); // Component is unmounted
-    };
-  }, []);
 
 
   useEffect(() => {
@@ -68,16 +59,14 @@ export default function Profile() {
             Authorization: `Bearer ${token}`,
           },
         });
-
-        if (isMounted) {
-          setUser(res?.data[0]);
-        }
+        setUser(res?.data[0]);
+        //console.log("data", res?.data[0]);
       } catch (error) {
         console.log(error);
       }
     };
     fetchUser();
-  }, [firstName, isMounted]);
+  }, [firstName]);
 
   const Image = styled("div")(({ theme }) => ({
     position: "relative",
@@ -206,7 +195,7 @@ export default function Profile() {
                   >
                     <Avatar
                       alt="Profile Picture"
-                      src={currentUser?.profilePicture || "/assets/person/noAvatar.png"}
+                      src={currentUser.profilePicture || "/assets/person/noAvatar.png"}
                       style={{ width: "150px", height: "150px" }}
                     />
                   </Badge>
@@ -217,7 +206,7 @@ export default function Profile() {
                     className="profileCoverImg"
                     src={
                       user.coverPicture
-                        ? user?.coverPicture
+                        ? user.coverPicture
                         : "/assets/person/noCover.png"
                     }
                     alt=""
@@ -225,7 +214,7 @@ export default function Profile() {
                   <Avatar
                     className="profileUserImg"
                     alt="Profile Picture"
-                    src={user?.profilePicture || "/assets/person/noAvatar.png"}
+                    src={user.profilePicture || "/assets/person/noAvatar.png"}
                     style={{ width: "150px", height: "150px" }}
                   />
                 </>
@@ -233,7 +222,7 @@ export default function Profile() {
             </div>
             <div className="profileInfo">
               <h4 className="profileInfoName">
-                {user?.firstName} {user?.lastName}
+                {user.firstName} {user.lastName}
               </h4>
               <span className="profileInfoDesc">{user?.desc}</span>
             </div>
@@ -242,7 +231,7 @@ export default function Profile() {
             </Box>
           </div>
           <div className="profileRightBottom">
-            <Feed firstName={firstName} onProfile={true} />
+            <Feed firstName={firstName?} onProfile={true} />
             <Box sx={{ display: { xs: "none", sm: "block", md: "block" } }}>
               <Rightbar user={user} />
             </Box>
