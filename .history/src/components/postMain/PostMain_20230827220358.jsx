@@ -112,32 +112,27 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
 
   useEffect(() => {
     const fetchComments = async () => {
-      const dataComment = post.comments || [];
-      //console.log("dataPost", post);
-      if (dataComment.length > 0) {
-        const commentsDataPromises = dataComment.map(async (commentId) => {
+      if (post.comments) {
+        const commentsDataPromises = post.comments.map(async (item) => {
           const commentsSnapshot = await firestore
             .collection("Comments")
-            .doc(commentId)
+            .doc(item)
             .get();
 
-          const commentData = commentsSnapshot.data() || {};
-          //console.log("object", commentData);
-
-          const userDoc = await firestore
+          const userdata = await firestore
             .collection("Users")
-            .doc(commentData.memberId)
+            .doc(item.member_id)
             .get();
 
-          const userData = userDoc.data() || {};
-
-          return {
+          const commentData = {
             id: commentsSnapshot.id,
-            profilePicture: userData.profilePicture,
-            firstName: userData.firstName,
-            lastName: userData.lastName,
-            ...commentData,
+            profilePicture: userdata.data().profilePicture,
+            firstName: userdata.data().firstName,
+            lastName: userdata.data().lastName,
+            ...commentsSnapshot.data(),
           };
+
+          return commentData;
         });
 
         const commentsData = await Promise.all(commentsDataPromises);
@@ -146,7 +141,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
     };
 
     fetchComments();
-  }, [post.comments, firestore]);
+  }, [post.comments, post.member_id]); // Include post.member_id in the dependency array
 
   useEffect(() => {
     const element = document.querySelector(".content");
@@ -303,7 +298,8 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
           title={<>{`${post?.firstName} ${post?.lastName}`}</>}
           subheader={
             <>
-              {formattedDate} {" | "}
+              {formattedDate}{" "}
+              {" | "}
               <span>
                 {
                   privacyOptions.find((option) => option.value === post.status)

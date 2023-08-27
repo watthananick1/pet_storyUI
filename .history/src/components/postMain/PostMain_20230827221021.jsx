@@ -113,31 +113,35 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
   useEffect(() => {
     const fetchComments = async () => {
       const dataComment = post.comments || [];
-      //console.log("dataPost", post);
-      if (dataComment.length > 0) {
-        const commentsDataPromises = dataComment.map(async (commentId) => {
+      if (dataComment) {
+        const commentsDataPromises = dataComment.map(async (item) => {
+          console.log("data", item);
           const commentsSnapshot = await firestore
             .collection("Comments")
-            .doc(commentId)
+            .doc(item)
             .get();
 
-          const commentData = commentsSnapshot.data() || {};
-          //console.log("object", commentData);
+          const commentUserData = commentsSnapshot.data();
 
-          const userDoc = await firestore
-            .collection("Users")
-            .doc(commentData.memberId)
-            .get();
+          commentUserData.member_id.map(async (item) => {
+            const userDoc = await firestore
+              .collection("Users")
+              .doc(item.member_id)
+              .get();
 
-          const userData = userDoc.data() || {};
+            const userdata = userDoc.data();
+            console.log("user", userdata);
 
-          return {
-            id: commentsSnapshot.id,
-            profilePicture: userData.profilePicture,
-            firstName: userData.firstName,
-            lastName: userData.lastName,
-            ...commentData,
-          };
+            const commentData = {
+              id: commentsSnapshot.id,
+              profilePicture: userdata.profilePicture,
+              firstName: userdata.firstName,
+              lastName: userdata.lastName,
+              ...commentsSnapshot.data(),
+            };
+
+            return commentData;
+          });
         });
 
         const commentsData = await Promise.all(commentsDataPromises);
@@ -146,7 +150,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
     };
 
     fetchComments();
-  }, [post.comments, firestore]);
+  }, [post.comments, post.member_id]); // Include post.member_id in the dependency array
 
   useEffect(() => {
     const element = document.querySelector(".content");

@@ -113,7 +113,7 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
   useEffect(() => {
     const fetchComments = async () => {
       const dataComment = post.comments || [];
-      //console.log("dataPost", post);
+      console.log("dataPost", dataComment)
       if (dataComment.length > 0) {
         const commentsDataPromises = dataComment.map(async (commentId) => {
           const commentsSnapshot = await firestore

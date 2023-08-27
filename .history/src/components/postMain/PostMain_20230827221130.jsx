@@ -113,38 +113,43 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
   useEffect(() => {
     const fetchComments = async () => {
       const dataComment = post.comments || [];
-      //console.log("dataPost", post);
       if (dataComment.length > 0) {
         const commentsDataPromises = dataComment.map(async (commentId) => {
           const commentsSnapshot = await firestore
             .collection("Comments")
             .doc(commentId)
             .get();
-
-          const commentData = commentsSnapshot.data() || {};
-          //console.log("object", commentData);
-
-          const userDoc = await firestore
-            .collection("Users")
-            .doc(commentData.memberId)
-            .get();
-
-          const userData = userDoc.data() || {};
-
+  
+          const commentData = commentsSnapshot.data();
+  
+          const memberPromises = commentData.member_id.map(async (memberId) => {
+            const userDoc = await firestore
+              .collection("Users")
+              .doc(memberId)
+              .get();
+  
+            const userData = userDoc.data();
+            return {
+              profilePicture: userData.profilePicture,
+              firstName: userData.firstName,
+              lastName: userData.lastName,
+            };
+          });
+  
+          const memberData = await Promise.all(memberPromises);
+  
           return {
             id: commentsSnapshot.id,
-            profilePicture: userData.profilePicture,
-            firstName: userData.firstName,
-            lastName: userData.lastName,
             ...commentData,
+            members: memberData,
           };
         });
-
+  
         const commentsData = await Promise.all(commentsDataPromises);
         setComments(commentsData);
       }
     };
-
+  
     fetchComments();
   }, [post.comments, firestore]);
 

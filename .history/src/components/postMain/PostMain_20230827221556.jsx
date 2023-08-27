@@ -113,7 +113,6 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
   useEffect(() => {
     const fetchComments = async () => {
       const dataComment = post.comments || [];
-      //console.log("dataPost", post);
       if (dataComment.length > 0) {
         const commentsDataPromises = dataComment.map(async (commentId) => {
           const commentsSnapshot = await firestore
@@ -121,15 +120,15 @@ export default function Post({ isPost, onPostUpdate, indexPost }) {
             .doc(commentId)
             .get();
 
-          const commentData = commentsSnapshot.data() || {};
-          //console.log("object", commentData);
+          const commentData = commentsSnapshot.data();
+          console.log("object", commentData);
 
           const userDoc = await firestore
             .collection("Users")
             .doc(commentData.memberId)
             .get();
 
-          const userData = userDoc.data() || {};
+          const userData = userDoc.data() || ;
 
           return {
             id: commentsSnapshot.id,
