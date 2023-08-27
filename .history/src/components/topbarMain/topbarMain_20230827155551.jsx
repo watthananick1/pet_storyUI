@@ -9,9 +9,17 @@ import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import Stack from "@mui/material/Stack";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import TextField from "@mui/material/TextField";
+import Avatar from "@mui/material/Avatar";
+import MenuIcon from "@mui/icons-material/Menu";
+import SearchIcon from "@mui/icons-material/Search";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import MoreIcon from "@mui/icons-material/MoreVert";
+import Autocomplete from "@mui/material/Autocomplete";
+import { performSearch } from "../search/Search";
+import { format } from "timeago.js";
+import axios from "axios";
 import Cookies from "js-cookie";
-import LockOpenIcon from "@mui/icons-material/LockOpen";
 import { AuthContext } from "../../context/AuthContext";
 import firebase from "firebase/compat/app";
 import DashboardIcon from "@mui/icons-material/Dashboard";
@@ -734,48 +742,56 @@ export default function PrimarySearchAppBar() {
 
   return (
     <Box sx={{ flexGrow: 1 }} className="topbarContainer">
-      <ThemeProvider theme={theme}>
-        <AppBar
-          position="sticky"
-          sx={{
-            width: "100%",
-          }}
-        >
-          <Toolbar>
-            <Typography variant="h6" noWrap component="div">
-              <NavLink
-                className="navbar-item"
-                activeClassName="is-active"
-                to="/"
-                exact
-                style={{ textDecoration: "none" }}
-              >
-                <span className="logo">Pet Story</span>
-              </NavLink>
-            </Typography>
-            <Box sx={{ flexGrow: 1 }} />
-            <Stack direction="row" spacing={2}>
-              <Button
-                color="inherit"
-                component={NavLink}
-                to="/register"
-                startIcon={<AccountCircleIcon />}
-              >
-                Sign up
-              </Button>
-              <Divider orientation="vertical" variant="middle" flexItem />
-              <Button
-                color="inherit"
-                component={NavLink}
-                to="/login"
-                startIcon={<LockOpenIcon />}
-              >
-                Login
-              </Button>
-            </Stack>
-          </Toolbar>
-        </AppBar>
-      </ThemeProvider>
-    </Box>
+    <ThemeProvider theme={theme}>
+      <AppBar
+        position="sticky"
+        sx={{
+          width: "100%",
+        }}
+      >
+        <Toolbar>
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+          >
+            <NavLink
+              className="navbar-item"
+              activeClassName="is-active"
+              to="/"
+              exact
+              style={{ textDecoration: "none" }}
+            >
+              <span className="logo">Pet Story</span>
+            </NavLink>
+          </Typography>
+          <Box sx={{ flexGrow: 1 }} />
+          <Box sx={{ display: { xs: "none", md: "flex" } }}>
+            <IconButton
+              key="noti"
+              color="inherit"
+              component={NavLink}
+              to="/login"
+            >
+              <LoginIcon />
+              <span>Login</span>
+            </IconButton>
+          </Box>
+          <Box sx={{ display: { xs: "flex", md: "none" } }}>
+            <IconButton
+              key="noti"
+              color="inherit"
+              component={NavLink}
+              to="/login"
+            >
+              <LoginIcon />
+              <span>Login</span>
+            </IconButton>
+          </Box>
+        </Toolbar>
+      </AppBar>
+    </ThemeProvider>
+  </Box>
+  
   );
 }

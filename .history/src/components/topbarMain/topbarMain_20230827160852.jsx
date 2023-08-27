@@ -758,7 +758,7 @@ export default function PrimarySearchAppBar() {
               <Button
                 color="inherit"
                 component={NavLink}
-                to="/register"
+                to="/login"
                 startIcon={<AccountCircleIcon />}
               >
                 Sign up

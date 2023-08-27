@@ -9,9 +9,17 @@ import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import Stack from "@mui/material/Stack";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import TextField from "@mui/material/TextField";
+import Avatar from "@mui/material/Avatar";
+import MenuIcon from "@mui/icons-material/Menu";
+import SearchIcon from "@mui/icons-material/Search";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import MoreIcon from "@mui/icons-material/MoreVert";
+import Autocomplete from "@mui/material/Autocomplete";
+import { performSearch } from "../search/Search";
+import { format } from "timeago.js";
+import axios from "axios";
 import Cookies from "js-cookie";
-import LockOpenIcon from "@mui/icons-material/LockOpen";
 import { AuthContext } from "../../context/AuthContext";
 import firebase from "firebase/compat/app";
 import DashboardIcon from "@mui/icons-material/Dashboard";
@@ -742,7 +750,12 @@ export default function PrimarySearchAppBar() {
           }}
         >
           <Toolbar>
-            <Typography variant="h6" noWrap component="div">
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              // sx={{ display: { xs: "none", sm: "block" } }}
+            >
               <NavLink
                 className="navbar-item"
                 activeClassName="is-active"
@@ -753,28 +766,49 @@ export default function PrimarySearchAppBar() {
                 <span className="logo">Pet Story</span>
               </NavLink>
             </Typography>
+
             <Box sx={{ flexGrow: 1 }} />
-            <Stack direction="row" spacing={2}>
-              <Button
-                color="inherit"
-                component={NavLink}
-                to="/register"
-                startIcon={<AccountCircleIcon />}
-              >
-                Sign up
-              </Button>
-              <Divider orientation="vertical" variant="middle" flexItem />
-              <Button
+            <Box sx={{ display: { xs: "none", md: "flex" } }}>
+              <IconButton
+                key="noti"
                 color="inherit"
                 component={NavLink}
                 to="/login"
-                startIcon={<LockOpenIcon />}
               >
-                Login
-              </Button>
-            </Stack>
+                <LoginIcon />
+              </IconButton>
+              {/* <IconButton
+                size="large"
+                edge="end"
+                aria-label="account of current user"
+                aria-controls={menuId}
+                aria-haspopup="true"
+                onClick={handleProfileMenuOpen}
+                color="inherit"
+              >
+                <Avatar
+                  aria-label="profile"
+                  src={user?.profilePicture}
+                  sx={{ width: 35, height: 35, mt: 0.5, mb: 0.5 }}
+                />
+              </IconButton> */}
+            </Box>
+            <Box sx={{ display: { xs: "flex", md: "none" } }}>
+              <IconButton
+                key="noti"
+                color="inherit"
+                component={NavLink}
+                to="/login"
+              >
+                <LoginIcon />
+                <span>Login</span>
+              </IconButton>
+            </Box>
           </Toolbar>
         </AppBar>
+        {/* {renderMobileMenu}
+        {renderMenu}
+        {renderMobileHomeMenu} */}
       </ThemeProvider>
     </Box>
   );

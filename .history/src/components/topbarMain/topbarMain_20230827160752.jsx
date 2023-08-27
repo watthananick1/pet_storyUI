@@ -9,7 +9,7 @@ import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import Stack from "@mui/material/Stack";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+
 import Cookies from "js-cookie";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import { AuthContext } from "../../context/AuthContext";
@@ -758,12 +758,11 @@ export default function PrimarySearchAppBar() {
               <Button
                 color="inherit"
                 component={NavLink}
-                to="/register"
-                startIcon={<AccountCircleIcon />}
+                to="/login"
+                startIcon={<LockOpenIcon />}
               >
                 Sign up
               </Button>
-              <Divider orientation="vertical" variant="middle" flexItem />
               <Button
                 color="inherit"
                 component={NavLink}

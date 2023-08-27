@@ -9,7 +9,16 @@ import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import Stack from "@mui/material/Stack";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import TextField from "@mui/material/TextField";
+import Avatar from "@mui/material/Avatar";
+import MenuIcon from "@mui/icons-material/Menu";
+import SearchIcon from "@mui/icons-material/Search";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import MoreIcon from "@mui/icons-material/MoreVert";
+import Autocomplete from "@mui/material/Autocomplete";
+import { performSearch } from "../search/Search";
+import { format } from "timeago.js";
+import axios from "axios";
 import Cookies from "js-cookie";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import { AuthContext } from "../../context/AuthContext";
@@ -754,16 +763,19 @@ export default function PrimarySearchAppBar() {
               </NavLink>
             </Typography>
             <Box sx={{ flexGrow: 1 }} />
-            <Stack direction="row" spacing={2}>
-              <Button
+            <Box sx={{ display: { xs: "none", md: "flex" } }}>
+              <IconButton
+                key="noti"
                 color="inherit"
                 component={NavLink}
-                to="/register"
-                startIcon={<AccountCircleIcon />}
+                to="/login"
               >
-                Sign up
-              </Button>
-              <Divider orientation="vertical" variant="middle" flexItem />
+                <LoginIcon />
+                <span>Login</span>
+              </IconButton>
+            </Box>
+          
+            <Stack direction="row" spacing={2}>
               <Button
                 color="inherit"
                 component={NavLink}
