@@ -1,11 +1,10 @@
-import { useContext, useEffect, useState, forwardRef } from "react";
+import React, { useContext, useEffect, useState, forwardRef } from "react";
 import Post from "../post/Post";
 import Share from "../share/Share";
-import "./sortpost_feed.css";
+import "./feed.css";
 import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
 import { Messageupdate } from "../../context/AuthActions";
-import { useParams } from "react-router-dom";
 import ReactLoading from "react-loading";
 import io from "socket.io-client";
 import Cookies from "js-cookie";
@@ -40,8 +39,9 @@ const Alert = forwardRef(function Alert(props, ref) {
 
 const path = process.env.REACT_APP_PATH_ID;
 
-export default function Sortpost_feed({ firstName, sort, typePet }) {
+export default function Feed({ firstName, onProfile, sort }) {
   const [posts, setPosts] = useState([]);
+  const [issort, setSort] = useState(sort);
   const [newPosts, setNewPosts] = useState([]);
   const [showNewPosts, setShowNewPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -50,6 +50,8 @@ export default function Sortpost_feed({ firstName, sort, typePet }) {
   const [Open, isSetOpen] = useState(false);
   const [placement, setPlacement] = useState();
   const [countPost, setCountPost] = useState(0);
+  const [sortedPosts, setSortedPosts] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
   const token = Cookies.get("token");
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const {
@@ -58,18 +60,61 @@ export default function Sortpost_feed({ firstName, sort, typePet }) {
     message: isMessage,
     open: isOpen,
     severity: isSeverity,
+    filter: filterPost,
+    filterText,
   } = useContext(AuthContext);
   const [message, setMessage] = useState({
     open: isOpen,
     severity: isSeverity,
     text: isMessage,
   });
+  const [filter, setFilter] = useState(filterPost);
+  const [filterTextdata, setfilterText] = useState(filterText);
 
   // useEffect(() => {
-  //   console.log("sort", sort);
-  //   setSort(sort);
-  //   fetchPosts();
-  // }, [sort]);
+  //   setFilter(filterPost);
+  //   setfilterText(filterText);
+  //console.log("filterPost", filterPost);
+  //console.log("filterText", filterText);
+  // fetchSortUserPosts();
+  //   fetchUserPosts();
+  // }, [filterPost, filterText]);
+
+  // useEffect(() => {
+  //   console.log("posts", posts);
+  // }, [posts]);
+
+  const applySortingAndFiltering = (posts) => {
+    // Filter posts based on the selected filter
+    const filteredPosts = posts.filter((post) => {
+      if (filterPost === "normal") {
+        return post.status === "normal";
+      } else if (filterPost === "private") {
+        return post.status === "private";
+      } else if (filterPost === "followers") {
+        return post.status === "followers";
+      } else {
+        return true;
+      }
+    });
+
+    // Sort the filtered posts based on your criteria (e.g., date)
+    const filteredAndSortedPosts = filteredPosts.filter((post) => {
+      const data = post.tagpet || [];
+      //console.log("data", data);
+      if (filterText !== "" && filterText !== null) {
+        const result = data.some(
+          (tag) => tag.toLowerCase() === filterText?.toLowerCase()
+        );
+        return result;
+      }
+      return true;
+    });
+
+    //console.log("object", filteredAndSortedPosts);
+
+    return filteredAndSortedPosts;
+  };
 
   const fetchPosts = async () => {
     const source = axios.CancelToken.source();
@@ -83,9 +128,8 @@ export default function Sortpost_feed({ firstName, sort, typePet }) {
         },
         cancelToken: source.token,
       });
-      const filteredPosts = res.data.filter((post) => post.title === "video");
-      //console.log("filteredPosts", filteredPosts);
-      setPosts(filteredPosts);
+
+      setPosts(res.data);
     } catch (err) {
       if (axios.isCancel(err)) {
         //console.log("Request canceled:", err.message);
@@ -100,30 +144,51 @@ export default function Sortpost_feed({ firstName, sort, typePet }) {
     }
   };
 
-  const fetchNewsPosts = async () => {
-    const source = axios.CancelToken.source();
+  const fetchUserPosts = async () => {
     try {
-      setLoading(true);
+      //const currentTime = new Date().getTime();
       isSetOpen(false);
-      const res = await axios.get(`${path}/api/posts/${user.member_id}/${sort || "date"}`, {
+      setLoading(true);
+      const res = await axios.get(`${path}/api/posts/user/${firstName}/${sort || "date"}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        cancelToken: source.token,
       });
 
-      // Filter posts with the "news" tag
-      const filteredPosts = res.data.filter((post) =>
-        post.tagpet.includes("news")
-      );
-      setPosts(filteredPosts);
-    } catch (err) {
-      if (axios.isCancel(err)) {
-        // Handle request cancellation (optional)
+      const sortedFilteredPosts = await applySortingAndFiltering(res.data);
+
+      //console.log("sortedFilteredPosts", sortedFilteredPosts);
+
+      setPosts(sortedFilteredPosts);
+    } catch (error) {
+      dispatch(Messageupdate("Failed Request Post", true, "error"));
+      if (error.response) {
+        if (
+          error.response.status === 404 &&
+          error.response.data.message === "User not found"
+        ) {
+          // Display a message to the user indicating that the user was not found
+          console.log(
+            "User not found. Displaying appropriate message to the user."
+          );
+          // You can update your state to display the message in your component
+          setErrorMessage("User not found. Please check the user's name.");
+        } else {
+          // Handle other error scenarios
+          console.log("Error:", error.response.data.message);
+          // You can update your state to display a general error message in your component
+          setErrorMessage(
+            "An error occurred while fetching user posts. Please try again later."
+          );
+        }
+      } else if (error.request) {
+        console.log("Request:", error.request);
       } else {
-        dispatch(Messageupdate("Failed Request Post", true, "error"));
-        enqueueSnackbar("Failed Request Post.", { variant: "error" });
-        console.log(err);
+        console.log("Error:", error.message);
+        // You can update your state to display a general error message in your component
+        setErrorMessage(
+          "An error occurred while fetching user posts. Please try again later."
+        );
       }
     } finally {
       setLoading(false);
@@ -131,11 +196,46 @@ export default function Sortpost_feed({ firstName, sort, typePet }) {
     }
   };
 
+  // const fetchSortUserPosts = async () => {
+  //   try {
+  //     //const currentTime = new Date().getTime();
+  //     isSetOpen(false);
+  //     setLoading(true);
+  //     // const res = await axios.get(`${path}/api/posts/user/${firstName}/date`, {
+  //     //   headers: {
+  //     //     Authorization: `Bearer ${token}`,
+  //     //   },
+  //     // });
+  //     const sortedFilteredPosts = applySortingAndFiltering(posts);
+  //     setPosts(sortedFilteredPosts)
+  //   } catch (error) {
+  //     dispatch(Messageupdate("Failed Request Post", true, "error"));
+  //     console.log(error);
+  //   } finally {
+  //     setLoading(false);
+  //     setOpen(false);
+  //   }
+  // };
+
   const handleRefresh = (key) => {
     closeSnackbar(key);
 
-    fetchPosts();
+    if (onProfile) {
+      console.log("onProfile", onProfile);
+      fetchUserPosts();
+    } else {
+      fetchPosts();
+    }
   };
+
+  useEffect(() => {
+    if (onProfile) {
+      console.log("onProfile", onProfile);
+      fetchUserPosts();
+    } else {
+      fetchPosts();
+    }
+  }, [ filterPost, filterText]);
 
   useEffect(() => {
     //console.log(newPosts);
@@ -209,17 +309,13 @@ export default function Sortpost_feed({ firstName, sort, typePet }) {
   };
 
   useEffect(() => {
-    //console.log("Feed", sort);
-    
-    const fetchData = async () => {
-      const source = axios.CancelToken.source();
-      
+    const source = axios.CancelToken.source();
+    const socket = io.connect(process.env.PATH_ID);
+    const fetchPosts = async () => {
       try {
-        setLoading(true);
-        isSetOpen(false);
-        
+        const currentTime = new Date().getTime();
         const res = await axios.get(
-          `${path}/api/posts/${user.member_id}/date`,
+          `${path}/api/posts/${user.member_id}/${sort || "date"}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -227,48 +323,65 @@ export default function Sortpost_feed({ firstName, sort, typePet }) {
             cancelToken: source.token,
           }
         );
-  
-        let filteredPosts = [];
-  
-        switch (sort) {
-          case "news":
-            filteredPosts = res.data.filter((post) =>
-              post.tagpet.includes("News")
-            );
-            break;
-  
-          case "type":
-            if (typePet) {
-              //console.log(typePet);
-              filteredPosts = res.data.filter((post) =>
-                post.tagpet.includes(typePet)
-              );
-            }
-            break;
-  
-          default:
-            filteredPosts = res.data.filter((post) => post.title === "video");
-            break;
-        }
-  
-        setPosts(filteredPosts);
+        setPosts(res.data);
       } catch (err) {
         if (axios.isCancel(err)) {
-          // Handle request cancellation (optional)
+          //console.log("Request canceled:", err.message);
         } else {
           dispatch(Messageupdate("Failed Request Post", true, "error"));
           enqueueSnackbar("Failed Request Post.", { variant: "error" });
           console.log(err);
-        } 
+        }
       } finally {
         setLoading(false);
-        setOpen(false);
       }
     };
-  
-    fetchData();
-  }, [firstName, newPosts, sort, typePet]);
-  
+
+    const fetchUserProPosts = async () => {
+      try {
+        const currentTime = new Date().getTime();
+
+        //setLoading(true);
+        isSetOpen(false);
+        console.log("firstName", firstName);
+        const res = await axios.get(
+          `${path}/api/posts/user/${firstName}/${sort || "date"}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        // const sortedFilteredPosts = await applySortingAndFiltering(res.data);
+
+        // console.log("sortedFilteredPosts", sortedFilteredPosts);
+
+        // setPosts(sortedFilteredPosts);
+        setPosts(res.data);
+      } catch (error) {
+        dispatch(Messageupdate("Failed Request Post", true, "error"));
+        console.log(error);
+      } finally {
+        //setLoading(false);
+      }
+    };
+
+    if (onProfile) {
+      console.log("onProfile1", onProfile);
+      fetchUserProPosts();
+    } else {
+      fetchPosts();
+    }
+    socket.on("newPost", handleNewPost);
+
+    return () => {
+      source.cancel("Component unmounted");
+      //console.log("Component unmounted", source);
+      // socket.off("newPost", handleNewPost);
+      socket.disconnect();
+    };
+  }, [onProfile, firstName, user.member_id]);
 
   useEffect(() => {
     try {
@@ -310,11 +423,7 @@ export default function Sortpost_feed({ firstName, sort, typePet }) {
               }
               return false;
             });
-          const filteredVideoPosts = filteredPosts.filter(
-            (post) => post.title === "video"
-          );
-          //console.log("filteredPosts", filteredPosts);
-          setNewPosts(filteredVideoPosts);
+          setNewPosts(filteredPosts);
           setLoading(false); // ปิดสถานะ loading
         });
       return unsubscribe;
@@ -385,16 +494,27 @@ export default function Sortpost_feed({ firstName, sort, typePet }) {
               />
             </div>
           ) : (
-            <>
+            <React.Fragment>
               {Open
                 ? newPosts.map((p, i) => (
-                    <Post key={i} isPost={p} indexPost={i} />
+                    <Post
+                      key={i}
+                      timestamp={p.timestamp}
+                      isPost={p}
+                      index={i}
+                      // ... other necessary props
+                    />
                   ))
                 : null}
               {posts.map((p, i) => (
-                <Post key={i} isPost={p} indexPost={i} />
+                <Post
+                  key={i}
+                  isPost={p}
+                  index={i}
+                  // ... other necessary props
+                />
               ))}
-            </>
+            </React.Fragment>
           )}
         </div>
       </SnackbarProvider>

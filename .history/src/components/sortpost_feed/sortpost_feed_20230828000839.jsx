@@ -77,7 +77,7 @@ export default function Sortpost_feed({ firstName, sort, typePet }) {
       //const currentTime = new Date().getTime();
       setLoading(true);
       isSetOpen(false);
-      const res = await axios.get(`${path}/api/posts/${user.member_id}/${sort || "date"}`, {
+      const res = await axios.get(`${path}/api/posts/${user.member_id}/$`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -105,7 +105,7 @@ export default function Sortpost_feed({ firstName, sort, typePet }) {
     try {
       setLoading(true);
       isSetOpen(false);
-      const res = await axios.get(`${path}/api/posts/${user.member_id}/${sort || "date"}`, {
+      const res = await axios.get(`${path}/api/posts/${user.member_id}/date`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
